@@ -5,7 +5,8 @@ import { faBookmark } from '@fortawesome/free-solid-svg-icons'
 
 function Navbar() {
 
-    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [user, setUser] = useState("");
     const [token, setToken] = useState("");
 
