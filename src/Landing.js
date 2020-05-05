@@ -3,6 +3,7 @@ import './Landing.css'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookOpen, faCheckSquare, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from "react-router-dom"
 
 
 function Landing(props) {
@@ -10,6 +11,8 @@ function Landing(props) {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+    const history = useHistory();
+
 
     function registerUser(e) {
         e.preventDefault()
@@ -22,9 +25,12 @@ function Landing(props) {
 
         axios.post('http://127.0.0.1:8000/api/register', data)
             .then(response => {
-                console.log(response.data);
-                props.setUser(response.data.user.name)
-                props.setToken(response.data.token)
+                props.store({
+                    user: response.data.user,
+                    token: response.data.token  
+                })
+                history.push("/dash")
+
             })
             .catch(errors => {
                 console.log(errors)
