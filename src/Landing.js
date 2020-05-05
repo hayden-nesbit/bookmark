@@ -1,12 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react';
 import './Landing.css'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookOpen, faCheckSquare, faTrophy } from '@fortawesome/free-solid-svg-icons';
 
 
+function Landing(props) {
 
-function Landing() {
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
 
+    function registerUser(e) {
+        e.preventDefault()
+
+        const data = {
+            name: name,
+            email: email,
+            password: password
+        };
+
+        axios.post('http://127.0.0.1:8000/api/register', data)
+            .then(response => {
+                console.log(response.data);
+                props.setUser(response.data.user.name)
+                props.setToken(response.data.token)
+            })
+            .catch(errors => {
+                console.log(errors)
+            });
+    }
 
     return (
         <div id="main" className="container p-5">
@@ -26,16 +49,16 @@ function Landing() {
             </div>
             <div className="row mt-5">
                 <div className="col-md-4 offset-4 mt-5 mb-5">
-                    <form>
+                    <form onSubmit={registerUser}>
                         <h5>Get started today</h5>
                         <div class="form-group">
-                            <input type="name" class="form-control" id="exampleInputEmail1" aria-describedby="nameHelp" placeholder="Name" />
+                            <input onChange={(e) => setName(e.target.value)} value={name} type="name" class="form-control" id="exampleInputEmail1" aria-describedby="nameHelp" placeholder="Name" />
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" />
+                            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" />
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                            <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
                         </div>
                         <button type="submit" class="btn btn-outline-primary">Sign up</button>
                     </form>

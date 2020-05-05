@@ -3,28 +3,31 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookmark } from '@fortawesome/free-solid-svg-icons'
 
-function Navbar() {
+function Navbar(props) {
 
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useState("");
-    const [token, setToken] = useState("");
+    const [email, setEmail] = useState("");
 
-    function handleSubmit(e) {
+    function loginUser(e) {
         e.preventDefault()
 
         const data = {
-            email: 'hayden.nesbit@campusoutreach.org',
-            password: 'sankey37'
+            email: email,
+            password: password
         };
-
         axios.post('http://127.0.0.1:8000/api/login', data)
             .then(response => {
+                console.log(response.data.token);
                 console.log(response.data.user);
-                setUser(response.data.user)
+                props.setUser(response.data.user.name)
+                props.setToken(response.data.token)
             })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+              })
     }
-
+    
     return (
         <div>
             <div >
@@ -45,21 +48,19 @@ function Navbar() {
 
                             <li className="nav-item">
                                 <a href="http://localhost:3000/" className="nav-link mt-1">
-                                    
                                     </a>
                             </li>
-
                         </ul>
-                        <form>
+                        <form onSubmit={loginUser}>
                             <div class="form-row align-items-center">
                                 <div class="col-auto">
-                                    <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Email"></input>
+                                    <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Email"></input>
                                 </div>
                                 <div class="col-auto">
-                                    <input type="password" class="form-control mb-2" id="inlineFormInput" placeholder="Password"></input>
+                                    <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" class="form-control mb-2" id="inlineFormInput" placeholder="Password"></input>
                                 </div>
                                 <div class="col-auto">
-                                    <button onClick={handleSubmit} type="submit" class="btn btn-secondary mb-2">Login</button>
+                                    <button type="submit" class="btn btn-secondary mb-2">Login</button>
                                 </div>
                             </div>
                         </form>
