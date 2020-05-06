@@ -46,7 +46,7 @@ function Landing(props) {
                 </div>
                 <div className="col-md-4 text-center">
                     <FontAwesomeIcon className="text-primary" icon={faCheckSquare} size="6x" />
-                    <h3 className="mt-4 text-secondary">Stay on Track</h3>
+                    <h3 className="mt-4 text-secondary">Track your Progress</h3>
                 </div>
                 <div className="col-md-4 text-center">
                     <FontAwesomeIcon className="text-primary" icon={faTrophy} size="6x" />

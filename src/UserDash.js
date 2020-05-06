@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
+import apiKey from './apiKey'
 
 
 function UserDash(props) {
 
     const [search, setSearch] = useState("");
-    const [response, setResponse] = useState([]);
-    const [apiKey] = useState("AIzaSyALST-ecLuont_6Gy4dH9ejWfusNi1fEzQ");
+    // const [books, setBooks] = useState([]);
 
     function handleChange(e) {
         e.preventDefault()
@@ -17,21 +17,24 @@ function UserDash(props) {
     function handleSubmit(e) {
         e.preventDefault()
 
-        axios.get('https://www.googleapis.com/books/v1/volumes?q=' + search + '&key=' + apiKey + "&maxResults=40")
+          axios.get('https://www.googleapis.com/books/v1/volumes?q=' + search + '&key=' + apiKey + "&maxResults=40")
             .then(response => {
                 console.log(response)
-                setResponse(response.data.items);
-                props.store({
-                    books: response.data.items
-                })
-            });
+                props.setBooks(response.data.items);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
     }
+    console.log(props.books)
 
-    let book = response.map((item, index) => (
-        <div>
+    let book = props.books.map((item, index) => {
+        console.log(item.volumeInfo.title)
+        return(
             <li key={index}>{item.volumeInfo.title}</li>
-        </div>
-    ))
+        )
+    })
 
     return (
         <div>
@@ -46,8 +49,7 @@ function UserDash(props) {
                 </div>
                 <div className="row">
                     <div className="col-md-4 offset-4 mt-5">
-                        {props.books ? {book}
-                        :
+                        {!props.books.length ? 
                         <div className="card" style={{ width: '18rem' }}>
                             <div className="card-body">
                                 <h5 className="card-title text-center">Book Title</h5>
@@ -59,7 +61,10 @@ function UserDash(props) {
                                     {/* <label class="form-check-label" for="exampleCheck1">Check me out</label> */}
                                 </div>
                             </div>
-                        </div>}
+                        </div>
+                        :
+                        book
+                        }
                     </div>
                 </div>
             </div>

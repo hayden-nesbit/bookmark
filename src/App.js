@@ -16,14 +16,17 @@ function App() {
 
   const [store, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
   const [user, setUser] = useState("");
-  const [token, setToken] = useState("token");
+  const [token, setToken] = useState("");
+  const [books, setBooks] = useState([]);
 
   function useLocalStorage(props) {
-    setUser(props.user)
-    setToken(props.token)
-    setLocalStorage(JSON.stringify(props))
+     setUser(props.user)
+     setToken(props.token)
+     setLocalStorage(JSON.stringify(props))
     localStorage.setItem("userData", JSON.stringify(props))
+    
   }
+  // console.log("done w/ everthing", user, token)
   
   useEffect(() => {
     if(store) {
@@ -34,13 +37,13 @@ function App() {
 
   return (
     <BrowserRouter>
-        <Navbar store={useLocalStorage} user={user} />
+        <Navbar store={useLocalStorage} user={user} token={token}/>
         <Switch>
           <Route exact path="/">
             <Landing store={useLocalStorage} />
           </Route>
           <Route path='/dash'>
-            <UserDash store={useLocalStorage} user={user} />
+            <UserDash store={useLocalStorage} user={user} setBooks={setBooks} books={books}/>
           </Route>
         </Switch>
         <Footer />

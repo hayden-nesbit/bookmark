@@ -32,13 +32,16 @@ function Navbar(props) {
     }
 
     function logoutUser() {
-        axios.get('http://127.0.0.1:8000/api/logout')
+        const data = {
+            headers: { Authorization: "Bearer " + props.token }
+        }
+        axios.get('http://127.0.0.1:8000/api/logout', data)
             .then(response => {
-                console.log(response.data)
                 localStorage.clear();
+                console.log(response)
                 props.store({
-                    user: response.data.user,
-                    token: response.data.token
+                    user: "",
+                    token: ""
                 })
                 history.push("/")
 
@@ -72,7 +75,7 @@ function Navbar(props) {
                                 </a>
                             </li>
                         </ul>
-                        {!props.user ? <form onSubmit={loginUser}>
+                        {!props.token ? <form onSubmit={loginUser}>
                             <div class="form-row align-items-center">
                                 <div class="col-auto">
                                     <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Email"></input>
