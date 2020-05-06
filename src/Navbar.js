@@ -36,6 +36,10 @@ function Navbar(props) {
             .then(response => {
                 console.log(response.data)
                 localStorage.clear();
+                props.store({
+                    user: response.data.user,
+                    token: response.data.token
+                })
                 history.push("/")
 
             })
