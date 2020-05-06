@@ -31,6 +31,20 @@ function Navbar(props) {
             })
     }
 
+    function logoutUser() {
+        axios.get('http://127.0.0.1:8000/api/logout')
+            .then(response => {
+                console.log(response.data)
+                localStorage.clear();
+                history.push("/")
+
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+    }
+
     return (
         <div>
             <div >
@@ -69,7 +83,7 @@ function Navbar(props) {
                         </form>
                             :
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-secondary mb-2">Logout</button>
+                                <button onClick={logoutUser} type="submit" class="btn btn-secondary mb-2">Logout</button>
                             </div>}
                     </div>
                 </nav>

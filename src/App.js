@@ -40,7 +40,7 @@ function App() {
             <Landing store={useLocalStorage} />
           </Route>
           <Route path='/dash'>
-            <UserDash store={useLocalStorage} user={user}  />
+            <UserDash store={useLocalStorage} user={user} />
           </Route>
         </Switch>
         <Footer />
