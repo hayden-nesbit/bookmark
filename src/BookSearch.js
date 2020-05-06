@@ -1,48 +1,41 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
+import apiKey from './apiKey'
+import SearchBar from './SearchBar'
+import { useHistory, Redirect } from "react-router-dom"
 
-function BookSearch() {
+function BookSearch(props) {
 
-const [search, setSearch] = useState("");
-const [response, setResponse] = useState([]);
-const [apiKey] = useState("AIzaSyALST-ecLuont_6Gy4dH9ejWfusNi1fEzQ");
+    const history = useHistory();
 
-function handleChange(e) {
-    e.preventDefault()
-    let search = e.target.value;
-    setSearch(search);
-}
+    function handleClick(e) {
+        props.storeCurrent(e.target.id)
+        history.push("/books")
+    }
 
-function handleSubmit(e) {
-    e.preventDefault()
+    let book = props.books ? props.books.map((item, index) => {
+        return (
+            <div>
+                <li key={index}>
+                    <a href={item.id}>{item.volumeInfo.title}</a>
+                    <button id={index} onClick={handleClick} className="btn btn-outline-primary float right">View</button>
+                </li>
+            </div>
+        )
+    })
+        :
+        null
 
-    axios.get('https://www.googleapis.com/books/v1/volumes?q=' + search + '&key=' + apiKey + "&maxResults=40")
-        .then(response => {
-            console.log(response)
-            setResponse(response.data.items);
-        });
-}
-
-let book = response.map((item, index) => (
-    <div>
-        <li key={index}>{item.volumeInfo.title}</li>
-    </div>
-))
-
-return (
-    <div>
-        <div className="container mt-5">
-            <form onSubmit={handleSubmit} className="form-inline my-2 my-lg-0">
-                <input className="form-control mr-sm-2" type="search" onChange={handleChange} placeholder="Search" aria-label="Search" />
-                <button className="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
+    return (
+        <div className="row">
+            <div className="col-md-4 offset-4 mt-5">
+                {book}
+            </div>
         </div>
-        <div className="container mt-3">
-            {book}
-        </div>
-    </div>
-);
+
+
+    );
 }
 
-export default BookSearch
+export default BookSearch;

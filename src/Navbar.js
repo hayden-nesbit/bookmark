@@ -89,8 +89,17 @@ function Navbar(props) {
                             </div>
                         </form>
                             :
-                            <div class="col-auto">
-                                <button onClick={logoutUser} type="submit" class="btn btn-secondary mb-2">Logout</button>
+                            <div>
+                                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul className="navbar-nav mr-auto">
+                                        <li className="nav-item">
+                                            <a className="nav-link" href="/dash">My Dashboard</a>
+                                        </li>
+                                    </ul>
+                                    <div class="col-auto">
+                                        <button onClick={logoutUser} type="submit" class="btn btn-secondary mb-2">Logout</button>
+                                    </div>
+                                </div>
                             </div>}
                     </div>
                 </nav>
