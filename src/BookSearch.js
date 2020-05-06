@@ -17,19 +17,41 @@ function BookSearch(props) {
     let book = props.books ? props.books.map((item, index) => {
         return (
             <div>
-                <li key={index}>
-                    <a href={item.id}>{item.volumeInfo.title}</a>
-                    <button id={index} onClick={handleClick} className="btn btn-outline-primary float right">View</button>
-                </li>
+                <div className="card border-0">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-sm-4">
+                                {item.volumeInfo.imageLinks ?
+                                    <img src={item.volumeInfo.imageLinks.smallThumbnail} />
+                                    :
+                                    null
+                                }
+                            </div>
+                            <div className="col-sm-8">
+                                <h6>{item.volumeInfo.title}</h6>
+                                {item.volumeInfo.authors ? 
+                                <p>by {item.volumeInfo.authors}</p>
+                                :
+                                null
+                                }
+                                <button id={index} onClick={handleClick} className="btn btn-outline-primary btn-sm">View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     })
+        /* <li key={index}>
+                        <a href={item.id}>{item.volumeInfo.title}</a>
+                        <button id={index} onClick={handleClick} className="btn btn-outline-primary float right">View</button>
+                    </li> */
         :
         null
 
     return (
         <div className="row">
-            <div className="col-md-4 offset-4 mt-5">
+            <div className="col-md-8 offset-2 mt-5">
                 {book}
             </div>
         </div>

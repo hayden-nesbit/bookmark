@@ -76,15 +76,15 @@ function Navbar(props) {
                             </li>
                         </ul>
                         {!props.token ? <form onSubmit={loginUser}>
-                            <div class="form-row align-items-center">
-                                <div class="col-auto">
-                                    <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Email"></input>
+                            <div className="form-row align-items-center">
+                                <div className="col-auto">
+                                    <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" className="form-control mb-2" id="inlineFormInput" placeholder="Email"></input>
                                 </div>
-                                <div class="col-auto">
-                                    <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" class="form-control mb-2" id="inlineFormInput" placeholder="Password"></input>
+                                <div className="col-auto">
+                                    <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className="form-control mb-2" id="inlineFormInput" placeholder="Password"></input>
                                 </div>
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-secondary mb-2">Login</button>
+                                <div className="col-auto">
+                                    <button type="submit" className="btn btn-secondary mb-2">Login</button>
                                 </div>
                             </div>
                         </form>
@@ -96,8 +96,8 @@ function Navbar(props) {
                                             <a className="nav-link" href="/dash">My Dashboard</a>
                                         </li>
                                     </ul>
-                                    <div class="col-auto">
-                                        <button onClick={logoutUser} type="submit" class="btn btn-secondary mb-2">Logout</button>
+                                    <div className="col-auto">
+                                        <button onClick={logoutUser} type="submit" className="btn btn-secondary mb-2">Logout</button>
                                     </div>
                                 </div>
                             </div>}
