@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar'
 import Landing from './Landing'
 import Footer from './Footer'
-// import BookSearch from './BookSearch'
+import BookView from './BookView'
 import UserDash from './UserDash'
 import 'bootstrap/dist/css/bootstrap.css';
 import {
@@ -18,15 +18,20 @@ function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState("");
   const [books, setBooks] = useState([]);
+  const [currentBook, setCurrentBook] = useState([]);
 
   function useLocalStorage(props) {
      setUser(props.user)
      setToken(props.token)
      setLocalStorage(JSON.stringify(props))
     localStorage.setItem("userData", JSON.stringify(props))
-    
   }
-  // console.log("done w/ everthing", user, token)
+
+  function storeBooks(props) {
+    setBooks(props.books)
+    setLocalStorage(JSON.stringify(props))
+    localStorage.setItem("bookData", JSON.stringify(props))
+  }
   
   useEffect(() => {
     if(store) {
@@ -37,13 +42,31 @@ function App() {
 
   return (
     <BrowserRouter>
-        <Navbar store={useLocalStorage} user={user} token={token}/>
+        <Navbar 
+            store={useLocalStorage} 
+            user={user} 
+            token={token}/>
         <Switch>
           <Route exact path="/">
             <Landing store={useLocalStorage} />
           </Route>
           <Route path='/dash'>
-            <UserDash store={useLocalStorage} user={user} setBooks={setBooks} books={books}/>
+            <UserDash 
+                store={useLocalStorage} 
+                user={user} 
+                setBooks={setBooks} 
+                books={books} 
+                storeBooks={storeBooks}
+                currentBook={currentBook}
+                setCurrentBook={setCurrentBook}
+                />
+          </Route>
+          <Route path='/books'>
+            <BookView 
+                books={books}
+                currentBook={currentBook}
+                setCurrentBook={setCurrentBook}
+                />
           </Route>
         </Switch>
         <Footer />
