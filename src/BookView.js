@@ -5,8 +5,10 @@ import { useHistory } from "react-router-dom"
 
 function BookView(props) {
 
+   
     const id = parseInt(props.currentBook)
     const book = props.books[id].volumeInfo
+    
 
     return (
         <div id="main" className="container">
@@ -17,6 +19,7 @@ function BookView(props) {
                         :
                         null
                     }
+                    <br/>
                     <ShelfButton />
                 </div>
                 <div className="col-md-6">
