@@ -42,10 +42,6 @@ function BookSearch(props) {
             </div>
         )
     })
-        /* <li key={index}>
-                        <a href={item.id}>{item.volumeInfo.title}</a>
-                        <button id={index} onClick={handleClick} className="btn btn-outline-primary float right">View</button>
-                    </li> */
         :
         null
 

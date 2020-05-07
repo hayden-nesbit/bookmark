@@ -1,14 +1,11 @@
 import React from 'react'
 import ShelfButton from './ShelfButton'
-import { useHistory } from "react-router-dom"
 
 
 function BookView(props) {
 
-   
     const id = parseInt(props.currentBook)
     const book = props.books[id].volumeInfo
-    
 
     return (
         <div id="main" className="container">
@@ -20,7 +17,11 @@ function BookView(props) {
                         null
                     }
                     <br/>
-                    <ShelfButton />
+                    <ShelfButton 
+                        storeUserTags={props.storeUserTags}
+                        userTags={props.userTags}
+                        currentBook={book}
+                        />
                 </div>
                 <div className="col-md-6">
                     <h1 className="mt-5">{book.title}</h1>
@@ -32,7 +33,6 @@ function BookView(props) {
                 </div>
             </div>
         </div>
-
     )
 }
 export default BookView;

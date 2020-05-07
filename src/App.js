@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar'
+// import ReactNav from './ReactNav'
 import Landing from './Landing'
 import Footer from './Footer'
 import BookView from './BookView'
@@ -21,7 +22,9 @@ function App() {
   const [token, setToken] = useState("");
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
-  const [shelves, setShelves] = useState(JSON.parse(localStorage.getItem("shelfData")));
+  const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
+  const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
+
 
   function useLocalStorage(props) {
     setUser(props.user)
@@ -33,7 +36,6 @@ function App() {
   function storeCurrent(props) {
     setCurrentBook(props)
     localStorage.setItem("CurrentBookId", JSON.stringify(props))
-    console.log(props)
   }
 
   function storeBooks(props) {
@@ -41,10 +43,15 @@ function App() {
     localStorage.setItem("bookData", JSON.stringify(props))
   }
 
-  // function storeShelves(props){
-  //   setShelves(props)
+  function storeTags(props){
+    setTags(props)
+    localStorage.setItem("tagData", JSON.stringify(props))
+  }
 
-  // }
+  function storeUserTags(props){
+    setUserTags(props)
+    localStorage.setItem("UserTagData", JSON.stringify(props))
+  }
 
   useEffect(() => {
     if (store) {
@@ -52,13 +59,14 @@ function App() {
       setToken(store.token)
     }
   }, [user])
-  console.log(books, currentBook)
   return (
     <BrowserRouter>
       <Navbar
         store={useLocalStorage}
         user={user}
-        token={token} />
+        token={token}
+        storeTags={storeTags}
+        tags={tags} />
       <Switch>
         <Route exact path="/">
           <Landing store={useLocalStorage} />
@@ -68,6 +76,8 @@ function App() {
             books={books}
             currentBook={currentBook}
             setCurrentBook={setCurrentBook}
+            storeUserTags={storeUserTags}
+            userTags={userTags}
           />
         </Route>
         <Route path="/(dash|search)/">
@@ -77,7 +87,10 @@ function App() {
             books={books}
             currentBook={currentBook}
             storeCurrent={storeCurrent}
-            storeBooks={storeBooks}></Home>
+            storeBooks={storeBooks}
+            storeTags={storeTags}
+            tags={tags}>
+          </Home>
         </Route>
       </Switch>
       <Footer />
@@ -96,7 +109,9 @@ function Home(props) {
               user={props.user}
               books={props.books}
               currentBook={props.currentBook}
-              storeCurrent={props.storeCurrent}>
+              storeCurrent={props.storeCurrent}
+              storeTags={props.storeTags}
+              tags={props.tags}>
             </UserDash>
           </Route>
           <Route path='/search'>

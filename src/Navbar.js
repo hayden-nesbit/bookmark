@@ -29,7 +29,19 @@ function Navbar(props) {
                 // handle error
                 console.log(error);
             })
+
+        axios.get('http://127.0.0.1:8000/api/tags')
+            .then(response => {
+                console.log(response.data)
+                props.storeTags(response.data.data)
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
     }
+
+
 
     function logoutUser() {
         const data = {
@@ -56,7 +68,7 @@ function Navbar(props) {
         <div>
             <div >
                 <nav className="navbar navbar-expand-lg navbar-light px-5 pt-3 border-bottom">
-                    <a id="brand" className="navbar-brand text-dark" href="http://localhost:3000/"><h4><FontAwesomeIcon icon={faBookmark} />  Bookmark</h4></a>
+                    <a id="brand" className="navbar-brand text-dark" href="/"><h4><FontAwesomeIcon icon={faBookmark} />  Bookmark</h4></a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
