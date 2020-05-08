@@ -23,6 +23,8 @@ function BookView(props) {
                         currentBook={props.books[id]}
                         tags={props.tags}
                         user={props.user}
+                        token={props.token}
+
                         />
                 </div>
                 <div className="col-md-6">

@@ -80,6 +80,7 @@ function App() {
             // userTags={userTags}
             tags={tags}
             user={user}
+            token={token}
           />
         </Route>
         <Route path="/(dash|search)/">

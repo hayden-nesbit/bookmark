@@ -8,21 +8,23 @@ const ShelfButton = (props) => {
   const toggle = () => setOpen(!dropdownOpen);
 
   function tagBook(id) {
+    const book = props.currentBook.volumeInfo
     const data = {
-      dataObj: { 
+      headers: { Authorization: "Bearer " + props.token },
         uniqueBook: props.currentBook.id,
         tagId: props.tags[id].id,
         userId: props.user.id,
-        bookTitle: props.currentBook.volumeInfo.title,
-        bookImage: props.currentBook.volumeInfo.imageLinks.smallThumbnail,
-        bookPage: props.currentBook.volumeInfo.pageCount,
-        bookAuthor: props.currentBook.volumeInfo.authors,
-        bookCat: props.currentBook.volumeInfo.categories,
-        bookPubDate: props.currentBook.volumeInfo.publishedDate,
-        bookPub: props.currentBook.volumeInfo.publisher}
+        bookTitle: book.title,
+        bookImage: book.imageLinks.smallThumbnail,
+        bookPage: book.pageCount,
+        bookAuthor: book.authors,
+        bookCat: book.categories,
+        bookPubDate: book.publishedDate,
+        bookPub: book.publisher,
+        bookDescription: book.description
       }
       console.log(data)
-    axios.post('/tagBook', data)
+    axios.post('http://127.0.0.1:8000/api/tagBook', data)
       .then(function (response) {
         console.log(response);
       })

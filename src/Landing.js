@@ -54,7 +54,7 @@ function Landing(props) {
                 </div>
             </div>
             <div className="row mt-5">
-                <div className="col-md-4 offset-4 mt-5 mb-5">
+                <div className="col-md-4 offset-4 col-sm-12 offset-0 mt-5 mb-5">
                     <form onSubmit={registerUser}>
                         <h5>Get started today</h5>
                         <div class="form-group">
