@@ -19,8 +19,10 @@ function BookView(props) {
                     <br/>
                     <ShelfButton 
                         storeUserTags={props.storeUserTags}
-                        userTags={props.userTags}
-                        currentBook={book}
+                        // userTags={props.userTags}
+                        currentBook={props.books[id]}
+                        tags={props.tags}
+                        user={props.user}
                         />
                 </div>
                 <div className="col-md-6">

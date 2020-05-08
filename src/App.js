@@ -77,7 +77,9 @@ function App() {
             currentBook={currentBook}
             setCurrentBook={setCurrentBook}
             storeUserTags={storeUserTags}
-            userTags={userTags}
+            // userTags={userTags}
+            tags={tags}
+            user={user}
           />
         </Route>
         <Route path="/(dash|search)/">
