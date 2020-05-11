@@ -53,10 +53,9 @@ function Navbar(props) {
                 console.log(response)
                 props.store({
                     user: "",
-                    token: ""
+                    token: null
                 })
                 history.push("/")
-
             })
             .catch(function (error) {
                 // handle error
@@ -87,7 +86,7 @@ function Navbar(props) {
                                 </a>
                             </li>
                         </ul>
-                        {!props.token ? <form onSubmit={loginUser}>
+                        {props.token === null ? <form onSubmit={loginUser}>
                             <div className="form-row align-items-center">
                                 <div className="col-auto">
                                     <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" className="form-control mb-2" id="inlineFormInput" placeholder="Email"></input>

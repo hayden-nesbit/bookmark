@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar'
-// import ReactNav from './ReactNav'
+// import Navbar from './Navbar'
+import ReactNav from './ReactNav'
 import Landing from './Landing'
 import Footer from './Footer'
 import BookView from './BookView'
@@ -19,7 +19,7 @@ function App() {
 
   const [store, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
   const [user, setUser] = useState("");
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(null);
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
   const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
@@ -61,7 +61,7 @@ function App() {
   }, [user])
   return (
     <BrowserRouter>
-      <Navbar
+      <ReactNav
         store={useLocalStorage}
         user={user}
         token={token}
@@ -77,7 +77,6 @@ function App() {
             currentBook={currentBook}
             setCurrentBook={setCurrentBook}
             storeUserTags={storeUserTags}
-            // userTags={userTags}
             tags={tags}
             user={user}
             token={token}
@@ -132,3 +131,4 @@ function Home(props) {
 }
 
 export default App;
+

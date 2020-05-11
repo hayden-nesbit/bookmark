@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './Landing.css'
 import axios from 'axios'
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookOpen, faCheckSquare, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from "react-router-dom"
+import { far } from '@fortawesome/free-regular-svg-icons';
 
 
 function Landing(props) {
@@ -41,7 +43,7 @@ function Landing(props) {
         <div id="main" className="container p-5">
             <div className="row mt-5">
                 <div className="col-md-4 text-center">
-                    <FontAwesomeIcon className="text-primary" icon={faBookOpen} size="6x" /><br />
+                    <FontAwesomeIcon icon={faBookOpen} className="text-primary"  size="6x" /><br />
                     <h3 className="mt-4 text-secondary">Find your Book</h3>
                 </div>
                 <div className="col-md-4 text-center">
