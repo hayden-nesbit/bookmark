@@ -19,7 +19,7 @@ function App() {
 
   const [store, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
   const [user, setUser] = useState("");
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState("");
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
   const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
@@ -31,6 +31,13 @@ function App() {
     setToken(props.token)
     setLocalStorage(JSON.stringify(props))
     localStorage.setItem("userData", JSON.stringify(props))
+  }
+
+  function clearLocalStorage(props) {
+    setUser(props.user)
+    setToken(props.token)
+    setLocalStorage(JSON.stringify(props))
+    console.log("inside method")
   }
 
   function storeCurrent(props) {
@@ -62,6 +69,7 @@ function App() {
   return (
     <BrowserRouter>
       <ReactNav
+        clear={clearLocalStorage}
         store={useLocalStorage}
         user={user}
         token={token}

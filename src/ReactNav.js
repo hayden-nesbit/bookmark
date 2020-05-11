@@ -21,7 +21,6 @@ import { useHistory } from "react-router-dom"
 
 const ReactNav = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggle = () => setIsOpen(!isOpen);
 
 
@@ -40,6 +39,7 @@ const ReactNav = (props) => {
             </NavItem>
           </Nav>
           <Login 
+            clear={props.clear}
             store={props.store}
             storeTags={props.storeTags}
             token={props.token}
@@ -95,8 +95,8 @@ const Login = (props) => {
       .then(response => {
         localStorage.clear();
         console.log(response)
-        props.store({
-          user: "",
+        props.clear({
+          user: {},
           token: ""
         })
         history.push("/")
@@ -110,7 +110,7 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
-      {!props.user ?
+      {!props.token ?
         <Form onSubmit={loginUser} inline>
           <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
             <Label for="exampleEmail" className="mr-sm-2"></Label>
