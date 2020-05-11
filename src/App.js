@@ -24,8 +24,20 @@ function App() {
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
   const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
   const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
 
+  function setStart(props) {
+      setStartDate(props.startDate)
+      localStorage.setItem("startDate", JSON.stringify(props))
+  }
+
+  function setEnd(props) {
+    setEndDate(props.endDate)
+    localStorage.setItem("endDate", JSON.stringify(props))
+  }
+  
   function useLocalStorage(props) {
     setUser(props.user)
     setToken(props.token)
@@ -99,7 +111,11 @@ function App() {
             storeCurrent={storeCurrent}
             storeBooks={storeBooks}
             storeTags={storeTags}
-            tags={tags}>
+            tags={tags}
+            setStart={setStart}
+            setEnd={setEnd}
+            startDate={startDate}
+            endDate={endDate}>
           </Home>
         </Route>
       </Switch>
@@ -121,7 +137,11 @@ function Home(props) {
               currentBook={props.currentBook}
               storeCurrent={props.storeCurrent}
               storeTags={props.storeTags}
-              tags={props.tags}>
+              tags={props.tags}
+              setStart={props.setStart}
+              setEnd={props.setEnd}
+              startDate={props.startDate}
+              endDate={props.endDate}>
             </UserDash>
           </Route>
           <Route path='/search'>
