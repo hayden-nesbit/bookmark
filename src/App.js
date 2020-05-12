@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import Navbar from './Navbar'
 import ReactNav from './ReactNav'
 import Landing from './Landing'
 import Footer from './Footer'
@@ -17,41 +16,50 @@ import {
 
 function App() {
 
-  const [store, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
-  const [user, setUser] = useState("");
+  const [userData, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
+  const [user, setUser] = useState({ user: null });
   const [token, setToken] = useState("");
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
   const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
   const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [bookList, setBookList] = useState("");
 
-
-  function setStart(startDateFromChild) {
-    console.log(startDateFromChild)
-      setStartDate(startDateFromChild)
-      localStorage.setItem("startDate", JSON.stringify(startDateFromChild))
-  }
-
-  function setEnd(props) {
-    setEndDate(props)
-    localStorage.setItem("endDate", JSON.stringify(props))
-  }
-  
-  function useLocalStorage(props) {
+  function setUserData(props) {
     setUser(props.user)
     setToken(props.token)
     setLocalStorage(JSON.stringify(props))
     localStorage.setItem("userData", JSON.stringify(props))
   }
 
+  function storeTags(props) {
+    setTags(props)
+    localStorage.setItem("tagData", JSON.stringify(props))
+  }
+
+  function storeUserTags(props) {
+    setUserTags(props)
+    localStorage.setItem("UserTagData", JSON.stringify(props))
+  }
+
+  function setStart(props) {
+    //add axios call to add date into DB
+    setStartDate(props)
+    localStorage.setItem("startDate", JSON.stringify(props))
+  }
+
+  function setEnd(props) {
+    //add axios call to add date into DB
+    setEndDate(props)
+    localStorage.setItem("endDate", JSON.stringify(props))
+  }
+
   function clearLocalStorage(props) {
     setUser(props.user)
     setToken(props.token)
     setLocalStorage(JSON.stringify(props))
-    console.log("inside method")
   }
 
   function storeCurrent(props) {
@@ -64,34 +72,27 @@ function App() {
     localStorage.setItem("bookData", JSON.stringify(props))
   }
 
-  function storeTags(props){
-    setTags(props)
-    localStorage.setItem("tagData", JSON.stringify(props))
-  }
-
-  function storeUserTags(props){
-    setUserTags(props)
-    localStorage.setItem("UserTagData", JSON.stringify(props))
-  }
-
   useEffect(() => {
-    if (store) {
-      setUser(store.user)
-      setToken(store.token)
+    if (userData) {
+      setUser(userData.user)
+      setToken(userData.token)
     }
   }, [user])
+
   return (
     <BrowserRouter>
       <ReactNav
         clear={clearLocalStorage}
-        store={useLocalStorage}
+        setUserData={setUserData}
         user={user}
         token={token}
         storeTags={storeTags}
-        tags={tags} />
+        tags={tags}
+
+      />
       <Switch>
         <Route exact path="/">
-          <Landing store={useLocalStorage} />
+          <Landing setUserData={setUserData} />
         </Route>
         <Route path='/books'>
           <BookView
@@ -102,11 +103,13 @@ function App() {
             tags={tags}
             user={user}
             token={token}
+            setBookList={setBookList}
+
           />
         </Route>
         <Route path="/(dash|search)/">
           <Home
-            store={useLocalStorage}
+            setUserData={setUserData}
             user={user}
             books={books}
             currentBook={currentBook}
@@ -119,7 +122,9 @@ function App() {
             startDate={startDate}
             endDate={endDate}
             bookList={bookList}
-            setBookList={setBookList}>
+            setBookList={setBookList}
+
+          >
           </Home>
         </Route>
       </Switch>
@@ -135,7 +140,7 @@ function Home(props) {
         <Switch>
           <Route path='/dash'>
             <UserDash
-              store={props.store}
+              setUserData={props.setUserData}
               user={props.user}
               books={props.books}
               currentBook={props.currentBook}
@@ -147,15 +152,16 @@ function Home(props) {
               startDate={props.startDate}
               endDate={props.endDate}
               bookList={props.bookList}
-              setBookList={props.setBookList}>
+              setBookList={props.setBookList}
+            >
             </UserDash>
           </Route>
           <Route path='/search'>
             <BookSearch
               books={props.books}
               currentBook={props.currentBook}
-              setCurrentBook={props.setCurrentBook}
-              storeCurrent={props.storeCurrent}>
+              storeCurrent={props.storeCurrent}
+            >
             </BookSearch>
           </Route>
         </Switch>

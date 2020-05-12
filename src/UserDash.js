@@ -7,35 +7,28 @@ import axios from 'axios';
 
 function UserDash(props) {
 
-    // let days = (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24)
+    let days = props.bookList ? (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24) : 0
+    let pages = props.bookList && props.currentBook ? (Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days)) : 0
+    let minutes = props.bookList && props.currentBook ? (Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days) * 1.5) : 0
+    let title = props.bookList && props.currentBook ? (props.books[parseInt(props.currentBook)].volumeInfo.title) : "You have no current goals!"
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/tags') 
-        .then(function (response) {
-            props.setBookList(response.data)
-            console.log(response.data);
-            // history.push("/dash")
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        
-      }, [])
+        axios.get('http://127.0.0.1:8000/api/tags/' + props.user.id)
+            .then(function (response) {
+                props.setBookList(response.data)
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        console.log(props.user)
+    }, [])
+
 
     let list1 = props.bookList.wantToRead ? props.bookList.wantToRead.length : 0
     let list2 = props.bookList.currentlyReading ? props.bookList.currentlyReading.length : 0
     let list3 = props.bookList.read ? props.bookList.read.length : 0
-    console.log(list1)
-
-    // let tags = props.tags ? props.tags.map((item, index) => {
-    //     return (
-    //         <ul key={index} className="list-unstyled">
-    //             <li className="mb-3"><a href="#">{item.title} ({list1})</a></li>
-    //         </ul>
-    //     )
-    // })
-    // :
-    // null
 
     return (
         <div className="row">
@@ -55,44 +48,40 @@ function UserDash(props) {
             <div className="col-md-4 mt-5">
                 <div className="card" style={{ width: '18rem' }}>
                     <div className="card-body">
-                        {props.currentBook ?
-                            <div>
-                                <h5 className="card-title text-center">
-                                    {props.books[parseInt(props.currentBook)].volumeInfo.title}
-                                </h5>
-                                <h1 className="card-title text-center display-1">
-                                    {/* {Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days)} */}
-                                </h1>
-                                <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
-                                <hr />
-                                {/* <h3 className="card-subtitle mb-2 text-muted text-center">{Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days) * 1.5} </h3> */}
-                                <h6 className="card-subtitle mb-2 text-muted text-center">min/day</h6>
-                                <div className="form-check pb-5 text-center">
-                                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                </div>
-                                <DatePicker
-                                    onChange={date => props.setStart(date)}
-                                    placeholderText="Select a start date"
-                                    selected={props.startDate}
-                                    selectsStart
-                                    startDate={props.startDate}
-                                    endDate={props.endDate}
 
-                                />
-                                <DatePicker
-                                    onChange={date => props.setEnd(date)}
-                                    placeholderText="Select an end date"
-                                    selected={props.endDate}
-                                    selectsEnd
-                                    startDate={props.startDate}
-                                    endDate={props.endDate}
-                                    minDate={props.startDate}
-                                />
+                        <div>
+                            <h5 className="card-title text-center">
+                                {title}
+                            </h5>
+                            <h1 className="card-title text-center display-1">
+                                {pages}
+                            </h1>
+                            <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
+                            <hr />
+                            <h3 className="card-subtitle mb-2 text-muted text-center">{minutes} </h3>
+                            <h6 className="card-subtitle mb-2 text-muted text-center">min/day</h6>
+                            <div className="form-check pb-5 text-center">
+                                <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                             </div>
-                            :
-                            <h5 className="card-title text-center">You have no current goal!</h5>
-                        }
+                            <DatePicker
+                                onChange={date => props.setStart(date)}
+                                placeholderText="Select a start date"
+                                selected={props.startDate}
+                                selectsStart
+                                startDate={props.startDate}
+                                endDate={props.endDate}
 
+                            />
+                            <DatePicker
+                                onChange={date => props.setEnd(date)}
+                                placeholderText="Select an end date"
+                                selected={props.endDate}
+                                selectsEnd
+                                startDate={props.startDate}
+                                endDate={props.endDate}
+                                minDate={props.startDate}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

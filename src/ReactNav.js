@@ -40,7 +40,7 @@ const ReactNav = (props) => {
           </Nav>
           <Login 
             clear={props.clear}
-            store={props.store}
+            setUserData={props.setUserData}
             storeTags={props.storeTags}
             token={props.token}
             user={props.user}
@@ -65,7 +65,7 @@ const Login = (props) => {
     };
     axios.post('http://127.0.0.1:8000/api/login', data)
       .then(response => {
-        props.store({
+        props.setUserData({
           user: response.data.user,
           token: response.data.token
         })

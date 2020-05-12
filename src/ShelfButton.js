@@ -15,8 +15,8 @@ const ShelfButton = (props) => {
     const data = {
       headers: { Authorization: "Bearer " + props.token },
         uniqueBook: props.currentBook.id,
-        tagId: props.tags[id].id,
-        userId: props.user.id,
+        tag_id: props.tags[id].id,
+        user_id: props.user.id,
         bookTitle: book.title,
         bookImage: book.imageLinks.smallThumbnail,
         bookPage: book.pageCount,
@@ -29,6 +29,7 @@ const ShelfButton = (props) => {
       // console.log(data)
     axios.post('http://127.0.0.1:8000/api/tagBook', data)
       .then(function (response) {
+        props.setBookList(response.data)
         console.log(response.data);
         history.push("/dash")
 

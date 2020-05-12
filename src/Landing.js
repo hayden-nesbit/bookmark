@@ -27,7 +27,7 @@ function Landing(props) {
 
         axios.post('http://127.0.0.1:8000/api/register', data)
             .then(response => {
-                props.store({
+                props.setUserData({
                     user: response.data.user,
                     token: response.data.token  
                 })
