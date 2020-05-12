@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import apiKey from './apiKey'
 import SearchBar from './SearchBar'
-import { useHistory, Redirect } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 
 function BookSearch(props) {
 

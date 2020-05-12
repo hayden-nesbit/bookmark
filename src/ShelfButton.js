@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import axios from 'axios';
+import { useHistory } from "react-router-dom"
+
 
 const ShelfButton = (props) => {
+  const history = useHistory();
   const [dropdownOpen, setOpen] = useState(false);
 
   const toggle = () => setOpen(!dropdownOpen);
@@ -17,16 +20,18 @@ const ShelfButton = (props) => {
         bookTitle: book.title,
         bookImage: book.imageLinks.smallThumbnail,
         bookPage: book.pageCount,
-        bookAuthor: book.authors,
-        bookCat: book.categories,
+        bookAuthor: book.authors[0],
+        bookCat: book.categories[0],
         bookPubDate: book.publishedDate,
         bookPub: book.publisher,
         bookDescription: book.description
       }
-      console.log(data)
+      // console.log(data)
     axios.post('http://127.0.0.1:8000/api/tagBook', data)
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+        history.push("/dash")
+
       })
       .catch(function (error) {
         console.log(error);

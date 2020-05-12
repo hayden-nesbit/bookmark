@@ -24,6 +24,7 @@ function BookView(props) {
                         tags={props.tags}
                         user={props.user}
                         token={props.token}
+                        setBookList={props.setBookList}
 
                         />
                 </div>

@@ -26,15 +26,17 @@ function App() {
   const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [bookList, setBookList] = useState("");
 
 
-  function setStart(props) {
-      setStartDate(props.startDate)
-      localStorage.setItem("startDate", JSON.stringify(props))
+  function setStart(startDateFromChild) {
+    console.log(startDateFromChild)
+      setStartDate(startDateFromChild)
+      localStorage.setItem("startDate", JSON.stringify(startDateFromChild))
   }
 
   function setEnd(props) {
-    setEndDate(props.endDate)
+    setEndDate(props)
     localStorage.setItem("endDate", JSON.stringify(props))
   }
   
@@ -115,7 +117,9 @@ function App() {
             setStart={setStart}
             setEnd={setEnd}
             startDate={startDate}
-            endDate={endDate}>
+            endDate={endDate}
+            bookList={bookList}
+            setBookList={setBookList}>
           </Home>
         </Route>
       </Switch>
@@ -141,7 +145,9 @@ function Home(props) {
               setStart={props.setStart}
               setEnd={props.setEnd}
               startDate={props.startDate}
-              endDate={props.endDate}>
+              endDate={props.endDate}
+              bookList={props.bookList}
+              setBookList={props.setBookList}>
             </UserDash>
           </Route>
           <Route path='/search'>
