@@ -65,9 +65,11 @@ const Login = (props) => {
     };
     axios.post('http://127.0.0.1:8000/api/login', data)
       .then(response => {
+        console.log(response.data)
         props.setUserData({
           user: response.data.user,
-          token: response.data.token
+          token: response.data.token,
+          tags: response.data.tags
         })
         history.push("/dash")
       })

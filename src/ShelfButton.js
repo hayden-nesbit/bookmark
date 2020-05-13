@@ -15,7 +15,7 @@ const ShelfButton = (props) => {
     const data = {
       headers: { Authorization: "Bearer " + props.token },
         uniqueBook: props.currentBook.id,
-        tag_id: props.tags[id].id,
+        tag_id: id,
         user_id: props.user.id,
         bookTitle: book.title,
         bookImage: book.imageLinks.smallThumbnail,
@@ -45,9 +45,9 @@ const ShelfButton = (props) => {
           Add to shelf
       </DropdownToggle>
         <DropdownMenu>
-          <DropdownItem onClick={() => tagBook(0)}>want-to-read</DropdownItem>
-          <DropdownItem onClick={() => tagBook(1)}>currently-reading</DropdownItem>
-          <DropdownItem onClick={() => tagBook(2)}>read</DropdownItem>
+          <DropdownItem onClick={() => tagBook(1)}>want-to-read</DropdownItem>
+          <DropdownItem onClick={() => tagBook(2)}>currently-reading</DropdownItem>
+          <DropdownItem onClick={() => tagBook(3)}>read</DropdownItem>
 
         </DropdownMenu>
       </ButtonDropdown>

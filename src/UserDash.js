@@ -12,18 +12,18 @@ function UserDash(props) {
     let minutes = props.bookList && props.currentBook ? (Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days) * 1.5) : 0
     let title = props.bookList && props.currentBook ? (props.books[parseInt(props.currentBook)].volumeInfo.title) : "You have no current goals!"
 
-    useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/tags/' + props.user.id)
-            .then(function (response) {
-                props.setBookList(response.data)
-                console.log(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    // useEffect(() => {
+    //     axios.get('http://127.0.0.1:8000/api/tags/' + props.user.id)
+    //         .then(function (response) {
+    //             props.setBookList(response.data)
+    //             console.log(response.data);
+    //         })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         });
 
-        console.log(props.user)
-    }, [])
+    //     console.log(props.user)
+    // }, [])
 
 
     let list1 = props.bookList.wantToRead ? props.bookList.wantToRead.length : 0
@@ -56,7 +56,7 @@ function UserDash(props) {
                             <h1 className="card-title text-center display-1">
                                 {pages}
                             </h1>
-                            <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
+                            <h5 className="card-subtitle mb-2 text-muted text-center">pages/day</h5>
                             <hr />
                             <h3 className="card-subtitle mb-2 text-muted text-center">{minutes} </h3>
                             <h6 className="card-subtitle mb-2 text-muted text-center">min/day</h6>

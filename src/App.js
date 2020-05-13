@@ -19,13 +19,14 @@ function App() {
   const [userData, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
   const [user, setUser] = useState({ user: null });
   const [token, setToken] = useState("");
+  // const [tags, setTags] = useState("")
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
-  const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
-  const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
+  // const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
+  // const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
 
   function setUserData(props) {
     setUser(props.user)
@@ -34,15 +35,15 @@ function App() {
     localStorage.setItem("userData", JSON.stringify(props))
   }
 
-  function storeTags(props) {
-    setTags(props)
-    localStorage.setItem("tagData", JSON.stringify(props))
-  }
+  // function storeTags(props) {
+  //   setTags(props)
+  //   localStorage.setItem("tagData", JSON.stringify(props))
+  // }
 
-  function storeUserTags(props) {
-    setUserTags(props)
-    localStorage.setItem("UserTagData", JSON.stringify(props))
-  }
+  // function storeUserTags(props) {
+  //   setUserTags(props)
+  //   localStorage.setItem("UserTagData", JSON.stringify(props))
+  // }
 
   function setStart(props) {
     //add axios call to add date into DB
@@ -86,8 +87,8 @@ function App() {
         setUserData={setUserData}
         user={user}
         token={token}
-        storeTags={storeTags}
-        tags={tags}
+        // storeTags={storeTags}
+        // tags={tags}
 
       />
       <Switch>
@@ -99,8 +100,8 @@ function App() {
             books={books}
             currentBook={currentBook}
             setCurrentBook={setCurrentBook}
-            storeUserTags={storeUserTags}
-            tags={tags}
+            // storeUserTags={storeUserTags}
+            // tags={tags}
             user={user}
             token={token}
             setBookList={setBookList}
@@ -115,8 +116,8 @@ function App() {
             currentBook={currentBook}
             storeCurrent={storeCurrent}
             storeBooks={storeBooks}
-            storeTags={storeTags}
-            tags={tags}
+            // storeTags={storeTags}
+            // tags={tags}
             setStart={setStart}
             setEnd={setEnd}
             startDate={startDate}
@@ -145,8 +146,8 @@ function Home(props) {
               books={props.books}
               currentBook={props.currentBook}
               storeCurrent={props.storeCurrent}
-              storeTags={props.storeTags}
-              tags={props.tags}
+              // storeTags={props.storeTags}
+              // tags={props.tags}
               setStart={props.setStart}
               setEnd={props.setEnd}
               startDate={props.startDate}
