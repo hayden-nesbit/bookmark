@@ -16,34 +16,19 @@ import {
 
 function App() {
 
-  const [userData, setLocalStorage] = useState(JSON.parse(localStorage.getItem("userData")));
-  const [user, setUser] = useState({ user: null });
-  const [token, setToken] = useState("");
-  // const [tags, setTags] = useState("")
+  var userData = JSON.parse(localStorage.getItem("userData"));
+  userData = userData ? userData : {}
+  const [user, setUser] = useState(userData);
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
-  // const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
-  // const [userTags, setUserTags] = useState(JSON.parse(localStorage.getItem("UserTagData")));
-
-  function setUserData(props) {
-    setUser(props.user)
-    setToken(props.token)
-    setLocalStorage(JSON.stringify(props))
-    localStorage.setItem("userData", JSON.stringify(props))
+ 
+  function setUserData(userFromApi) {
+    setUser(userFromApi)
+    localStorage.setItem("userData", JSON.stringify(userFromApi))
   }
-
-  // function storeTags(props) {
-  //   setTags(props)
-  //   localStorage.setItem("tagData", JSON.stringify(props))
-  // }
-
-  // function storeUserTags(props) {
-  //   setUserTags(props)
-  //   localStorage.setItem("UserTagData", JSON.stringify(props))
-  // }
 
   function setStart(props) {
     //add axios call to add date into DB
@@ -59,8 +44,9 @@ function App() {
 
   function clearLocalStorage(props) {
     setUser(props.user)
-    setToken(props.token)
-    setLocalStorage(JSON.stringify(props))
+    // setToken(props.token)
+    // setLocalStorage(JSON.stringify(props))
+    localStorage.removeItem("userData")
   }
 
   function storeCurrent(props) {
@@ -73,12 +59,12 @@ function App() {
     localStorage.setItem("bookData", JSON.stringify(props))
   }
 
-  useEffect(() => {
-    if (userData) {
-      setUser(userData.user)
-      setToken(userData.token)
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (userData) {
+  //     setUser(userData.user)
+  //     // setToken(userData.token)
+  //   }
+  // }, [user])
 
   return (
     <BrowserRouter>
@@ -86,9 +72,7 @@ function App() {
         clear={clearLocalStorage}
         setUserData={setUserData}
         user={user}
-        token={token}
-        // storeTags={storeTags}
-        // tags={tags}
+        // token={token}
 
       />
       <Switch>
@@ -100,10 +84,8 @@ function App() {
             books={books}
             currentBook={currentBook}
             setCurrentBook={setCurrentBook}
-            // storeUserTags={storeUserTags}
-            // tags={tags}
             user={user}
-            token={token}
+            // token={token}
             setBookList={setBookList}
 
           />
@@ -112,18 +94,16 @@ function App() {
           <Home
             setUserData={setUserData}
             user={user}
-            books={books}
             currentBook={currentBook}
             storeCurrent={storeCurrent}
             storeBooks={storeBooks}
-            // storeTags={storeTags}
-            // tags={tags}
             setStart={setStart}
             setEnd={setEnd}
             startDate={startDate}
             endDate={endDate}
             bookList={bookList}
             setBookList={setBookList}
+            books={books}
 
           >
           </Home>
@@ -143,25 +123,23 @@ function Home(props) {
             <UserDash
               setUserData={props.setUserData}
               user={props.user}
-              books={props.books}
               currentBook={props.currentBook}
               storeCurrent={props.storeCurrent}
-              // storeTags={props.storeTags}
-              // tags={props.tags}
               setStart={props.setStart}
               setEnd={props.setEnd}
               startDate={props.startDate}
               endDate={props.endDate}
               bookList={props.bookList}
               setBookList={props.setBookList}
+              books={props.books}
             >
             </UserDash>
           </Route>
           <Route path='/search'>
             <BookSearch
-              books={props.books}
               currentBook={props.currentBook}
               storeCurrent={props.storeCurrent}
+              books={props.books}
             >
             </BookSearch>
           </Route>

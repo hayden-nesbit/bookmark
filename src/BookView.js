@@ -18,12 +18,12 @@ function BookView(props) {
                     }
                     <br/>
                     <ShelfButton 
-                        storeUserTags={props.storeUserTags}
-                        userTags={props.userTags}
+                        // storeUserTags={props.storeUserTags}
+                        // userTags={props.userTags}
                         currentBook={props.books[id]}
-                        tags={props.tags}
+                        // tags={props.tags}
                         user={props.user}
-                        token={props.token}
+                        // token={props.token}
                         setBookList={props.setBookList}
 
                         />

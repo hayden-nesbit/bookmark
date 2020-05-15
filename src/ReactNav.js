@@ -42,7 +42,7 @@ const ReactNav = (props) => {
             clear={props.clear}
             setUserData={props.setUserData}
             storeTags={props.storeTags}
-            token={props.token}
+            // token={props.token}
             user={props.user}
             />
         </Collapse>
@@ -66,22 +66,8 @@ const Login = (props) => {
     axios.post('http://127.0.0.1:8000/api/login', data)
       .then(response => {
         console.log(response.data)
-        props.setUserData({
-          user: response.data.user,
-          token: response.data.token,
-          tags: response.data.tags
-        })
+        props.setUserData(response.data)
         history.push("/dash")
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-
-    axios.get('http://127.0.0.1:8000/api/tags')
-      .then(response => {
-        console.log(response.data)
-        props.storeTags(response.data.data)
       })
       .catch(function (error) {
         // handle error
@@ -91,7 +77,7 @@ const Login = (props) => {
 
   function logoutUser() {
     const data = {
-      headers: { Authorization: "Bearer " + props.token }
+      headers: { Authorization: "Bearer " + props.user.token }
     }
     axios.get('http://127.0.0.1:8000/api/logout', data)
       .then(response => {
@@ -109,10 +95,10 @@ const Login = (props) => {
         console.log(error);
       })
   }
-
+  console.log(props)
   return (
     <React.Fragment>
-      {!props.token ?
+      {!props.user.token ?
         <Form onSubmit={loginUser} inline>
           <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
             <Label for="exampleEmail" className="mr-sm-2"></Label>
