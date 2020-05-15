@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowAltCircleLeft, faSurprise } from '@fortawesome/free-solid-svg-icons';
+
 
 function UserDash(props) {
 
     const [view, setView] = useState("dash")
-    
+
     const user = props.user.user
     console.log(user)
     let tags = props.tags ? props.tags.tags : props.user.user.tags
     console.log(tags)
 
-    
+
     // const filteredList = (filterBy) => {
     //     return listToFilterBy
     //         .filter(item => item.toCompare === filterBy)
@@ -26,7 +29,7 @@ function UserDash(props) {
     // }
     // \\\\\
     // { readNow ? filteredList("read-now") : filteredList("read-later") }
- 
+
 
     //array.filter 
     let want = [];
@@ -47,12 +50,23 @@ function UserDash(props) {
         setView(view)
     }
 
+    
+    function setGoal(id) {
+        current = current.find(({book_id}) => book_id === id);
+        props.storeGoal(current)
+        handleClick("dash")
+    }
+
+    function deleteBook() {
+    }
+
     console.log(props.books)
 
     let days = props.bookList ? (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24) : 0
-    let pages = props.bookList && props.currentBook ? (Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days)) : 0
-    let minutes = props.bookList && props.currentBook ? (Math.ceil(props.books[parseInt(props.currentBook)].volumeInfo.pageCount / days) * 1.5) : 0
-    let title = props.bookList && props.currentBook ? (props.books[parseInt(props.currentBook)].volumeInfo.title) : "You have no current goals!"
+    let pages = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days)) : 0
+    let minutes = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days) * 1.5) : 0
+    let title = props.goal ? (props.goal.title) : "You have no current goals!" 
+
 
 
     const dashOptions = () => {
@@ -70,7 +84,7 @@ function UserDash(props) {
                     :
                     <div>
                         <br />
-                        <li className="mb-3"><a href="#" onClick={() => handleClick("dash")}>return</a></li>
+                        <li className="mb-3"><a href="#" onClick={() => handleClick("dash")}><FontAwesomeIcon icon={faArrowAltCircleLeft} size="lg" /></a></li>
                     </div>
                 }
             </ul>
@@ -78,26 +92,56 @@ function UserDash(props) {
     }
 
     let currentView = current.map((book, index) => {
-        console.log(book.title)
+        console.log(book)
         return (
-            <div id={index}>
-                <b>{book.title}</b>, {book.author}
+            <div id={index} className="container mb-4">
+                <div className="row">
+                    <div className="col-sm-8">
+                        <b>{book.title}</b>, {book.author}
+                    </div>
+                    <div className="col-md-2 col-12">
+                        <button id={index} onClick={() => setGoal(book.book_id)} className="btn btn-outline-success btn-sm">Set Goal</button>
+                    </div>
+                    <div className="col-md-2 col-12">
+                        <button id={index} onClick={deleteBook} className="btn btn-outline-danger btn-sm">Remove</button>
+                    </div>
+                </div>
             </div>
         )
     })
     let wantView = want.map((book, index) => {
         console.log(book.title)
         return (
-            <div id={index}>
-                <b>{book.title}</b>, {book.author}
+            <div id={index} className="container mb-4">
+                <div className="row">
+                    <div className="col-sm-8">
+                        <b>{book.title}</b>, {book.author}
+                    </div>
+                    <div className="col-md-2 col-12">
+                        <button id={index} onClick={handleClick} className="btn btn-outline-success btn-sm">Set Goal</button>
+                    </div>
+                    <div className="col-md-2 col-12">
+                        <button id={index} onClick={handleClick} className="btn btn-outline-danger btn-sm">Remove</button>
+                    </div>
+                </div>
             </div>
         )
     })
     let readView = read.map((book, index) => {
         console.log(book.title)
         return (
-            <div id={index}>
-               <b>{book.title}</b>, {book.author}
+            <div id={index} className="container mb-4">
+                <div className="row">
+                    <div className="col-sm-8">
+                        <b>{book.title}</b>, {book.author}
+                    </div>
+                    <div className="col-md-2 col-12">
+                        <button id={index} onClick={handleClick} className="btn btn-outline-success btn-sm">Set Goal</button>
+                    </div>
+                    <div className="col-md-2 col-12">
+                        <button id={index} onClick={handleClick} className="btn btn-outline-danger btn-sm">Remove</button>
+                    </div>
+                </div>
             </div>
         )
     })
@@ -113,8 +157,8 @@ function UserDash(props) {
                 <br />
                 {props.user ? dashOptions() : null}
             </div>
-            <div className="col-md-4 mt-5">
-                {view === "current" ? currentView : view === "want" ? wantView : view === "read" ? readView 
+            <div className="col-md-8 mt-5">
+                {view === "current" ? currentView : view === "want" ? wantView : view === "read" ? readView
                     :
                     <div className="card mb-5" style={{ width: '18rem' }}>
                         <div className="card-body">

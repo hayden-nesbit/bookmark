@@ -25,10 +25,16 @@ function App() {
   const [endDate, setEndDate] = useState(new Date());
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
+  const [goal, setGoal] = useState(JSON.parse(localStorage.getItem("goal")));
  
   function storeTags(props) {
     setTags(props)
     localStorage.setItem("tagData", JSON.stringify(props))
+  }
+
+  function storeGoal(props) {
+    setGoal(props)
+    localStorage.setItem("goal", JSON.stringify(props))
   }
   
   function setUserData(userFromApi) {
@@ -88,8 +94,8 @@ function App() {
         <Route path='/books'>
           <BookView
             books={books}
-            currentBook={currentBook}
-            setCurrentBook={setCurrentBook}
+            // currentBook={currentBook}
+            // setCurrentBook={setCurrentBook}
             user={user}
             // token={token}
             setBookList={setBookList}
@@ -102,8 +108,8 @@ function App() {
           <Home
             setUserData={setUserData}
             user={user}
-            currentBook={currentBook}
-            storeCurrent={storeCurrent}
+            // currentBook={currentBook}
+            // storeCurrent={storeCurrent}
             storeBooks={storeBooks}
             setStart={setStart}
             setEnd={setEnd}
@@ -114,6 +120,8 @@ function App() {
             books={books}
             tags={tags}
             storeTags={storeTags}
+            goal={goal}
+            storeGoal={storeGoal}
 
           >
           </Home>
@@ -133,8 +141,8 @@ function Home(props) {
             <UserDash
               setUserData={props.setUserData}
               user={props.user}
-              currentBook={props.currentBook}
-              storeCurrent={props.storeCurrent}
+              // currentBook={props.currentBook}
+              // storeCurrent={props.storeCurrent}
               setStart={props.setStart}
               setEnd={props.setEnd}
               startDate={props.startDate}
@@ -144,13 +152,15 @@ function Home(props) {
               books={props.books}
               tags={props.tags}
               storeTags={props.storeTags}
+              goal={props.goal}
+              storeGoal={props.storeGoal}
             >
             </UserDash>
           </Route>
           <Route path='/search'>
             <BookSearch
-              currentBook={props.currentBook}
-              storeCurrent={props.storeCurrent}
+              // currentBook={props.currentBook}
+              // storeCurrent={props.storeCurrent}
               books={props.books}
             >
             </BookSearch>
