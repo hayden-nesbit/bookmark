@@ -16,8 +16,8 @@ function BookView(props) {
                         :
                         null
                     }
-                    <br/>
-                    <ShelfButton 
+                    <br />
+                    <ShelfButton
                         // storeUserTags={props.storeUserTags}
                         // userTags={props.userTags}
                         currentBook={props.books[id]}
@@ -25,8 +25,10 @@ function BookView(props) {
                         user={props.user}
                         // token={props.token}
                         setBookList={props.setBookList}
+                        tags={props.tags}
+                        storeTags={props.storeTags}
 
-                        />
+                    />
                 </div>
                 <div className="col-md-6">
                     <h1 className="mt-5">{book.title}</h1>

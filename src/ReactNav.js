@@ -83,11 +83,11 @@ const Login = (props) => {
       .then(response => {
         localStorage.clear();
         console.log(response)
+        history.push("/")
         props.clear({
           user: {},
           token: ""
         })
-        history.push("/")
 
       })
       .catch(function (error) {

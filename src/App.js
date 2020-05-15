@@ -19,12 +19,18 @@ function App() {
   var userData = JSON.parse(localStorage.getItem("userData"));
   userData = userData ? userData : {}
   const [user, setUser] = useState(userData);
+  const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
  
+  function storeTags(props) {
+    setTags(props)
+    localStorage.setItem("tagData", JSON.stringify(props))
+  }
+  
   function setUserData(userFromApi) {
     setUser(userFromApi)
     localStorage.setItem("userData", JSON.stringify(userFromApi))
@@ -87,6 +93,8 @@ function App() {
             user={user}
             // token={token}
             setBookList={setBookList}
+            tags={tags}
+            storeTags={storeTags}
 
           />
         </Route>
@@ -104,6 +112,8 @@ function App() {
             bookList={bookList}
             setBookList={setBookList}
             books={books}
+            tags={tags}
+            storeTags={storeTags}
 
           >
           </Home>
@@ -132,6 +142,8 @@ function Home(props) {
               bookList={props.bookList}
               setBookList={props.setBookList}
               books={props.books}
+              tags={props.tags}
+              storeTags={props.storeTags}
             >
             </UserDash>
           </Route>

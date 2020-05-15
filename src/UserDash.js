@@ -5,12 +5,30 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 function UserDash(props) {
 
-    const [view, setView] = useState("")
-
+    const [view, setView] = useState("dash")
+    
     const user = props.user.user
     console.log(user)
-    let tags = props.user.user.tags
+    let tags = props.tags ? props.tags.tags : props.user.user.tags
+    console.log(tags)
 
+    
+    // const filteredList = (filterBy) => {
+    //     return listToFilterBy
+    //         .filter(item => item.toCompare === filterBy)
+    //         .map((item, index) => {
+    //             return (
+    //                 <div key={index}>
+    //                     {item.name}
+    //                 </div>
+    //             )
+    //         })
+    // }
+    // \\\\\
+    // { readNow ? filteredList("read-now") : filteredList("read-later") }
+ 
+
+    //array.filter 
     let want = [];
     let current = [];
     let read = [];
@@ -25,8 +43,8 @@ function UserDash(props) {
     }
     console.log({ want, current, read })
 
-    function handleClick() {
-        setView("current")
+    function handleClick(view) {
+        setView(view)
     }
 
     console.log(props.books)
@@ -44,22 +62,45 @@ function UserDash(props) {
         let list3 = read ? read.length : 0
         return (
             <ul className="list-unstyled">
-                <li className="mb-3"><a href="#" className="text-primary">want-to-read ({list1})</a></li>
-                <li className="mb-3"><a href="#" onClick={handleClick}>currently-reading ({list2})</a></li>
-                <li className="mb-3"><a href="/bookdash">read ({list3})</a></li>
-                {view === "current" ?
+                <li className="mb-3"><a href="#" onClick={() => handleClick("want")}>want-to-read ({list1})</a></li>
+                <li className="mb-3"><a href="#" onClick={() => handleClick("current")}>currently-reading ({list2})</a></li>
+                <li className="mb-3"><a href="#" onClick={() => handleClick("read")}>read ({list3})</a></li>
+                {view === "dash" ?
+                    null
+                    :
                     <div>
                         <br />
-                        <li className="mb-3"><a href="/dash">return</a></li>
+                        <li className="mb-3"><a href="#" onClick={() => handleClick("dash")}>return</a></li>
                     </div>
-                    :
-                    null
                 }
             </ul>
         )
     }
 
-
+    let currentView = current.map((book, index) => {
+        console.log(book.title)
+        return (
+            <div id={index}>
+                <b>{book.title}</b>, {book.author}
+            </div>
+        )
+    })
+    let wantView = want.map((book, index) => {
+        console.log(book.title)
+        return (
+            <div id={index}>
+                <b>{book.title}</b>, {book.author}
+            </div>
+        )
+    })
+    let readView = read.map((book, index) => {
+        console.log(book.title)
+        return (
+            <div id={index}>
+               <b>{book.title}</b>, {book.author}
+            </div>
+        )
+    })
 
     return (
         <div className="row">
@@ -73,18 +114,9 @@ function UserDash(props) {
                 {props.user ? dashOptions() : null}
             </div>
             <div className="col-md-4 mt-5">
-                {view === "current" ?
-                    current.map((book, index) => {
-                        console.log(book.title)
-                        return (
-                            <div id={index}>
-                                {book.title}
-                            </div>
-                            //card
-                        )
-                    })
+                {view === "current" ? currentView : view === "want" ? wantView : view === "read" ? readView 
                     :
-                    <div className="card" style={{ width: '18rem' }}>
+                    <div className="card mb-5" style={{ width: '18rem' }}>
                         <div className="card-body">
 
                             <div>
