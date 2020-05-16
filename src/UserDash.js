@@ -22,6 +22,7 @@ function UserDash(props) {
     let current = tags.filter(tag => tag.tag_id === 2)
     let read = tags.filter(tag => tag.tag_id === 3)
 
+<<<<<<< HEAD
     function deleteBook(id, user) {
         console.log(id)
         const data = {
@@ -72,6 +73,48 @@ function UserDash(props) {
         // renderList = setList(id)
     }
 
+=======
+
+    const setList = (id) => {
+        let list = tags.filter(tag => tag.tag_id === id)
+        console.log(list)
+        // setView(view)
+        return list.map((book, index) => {
+            return (
+                <div id={index} className="container mb-4">
+                    <div className="row">
+                        <div className="col-sm-8">
+                            <b>{book.title}</b>, {book.author}
+                        </div>
+                        <div className="col-md-2 col-12">
+                            <button id={index} onClick={() => setGoal(book.book_id)} className="btn btn-outline-success btn-sm">Set Goal</button>
+                        </div>
+                        <div className="col-md-2 col-12">
+                            <button id={index} onClick={deleteBook} className="btn btn-outline-danger btn-sm">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+    }
+
+    let renderList =[]
+    function handleClick(id, view) {
+        setView(view)
+       renderList = setList(id)
+        // technically this is not a state, should be renamed to generate list
+    }
+
+    
+    function setGoal(id) {
+        //what to call this now?
+        // why do you have so many function calls containing(({})) objects in parentheses???
+        let currentGoal = renderList.find(({book_id}) => book_id === id);
+        // find only returns one item
+        props.storeGoal(current)
+        handleClick("dash")
+    }
+>>>>>>> a96c05ff0ea647f1ed8c865e38a684f9eeffc965
 
     function setGoal(id, arr) {
         // let currentGoal = renderList.find(({book_id}) => book_id === id);
@@ -197,7 +240,11 @@ function UserDash(props) {
                 {props.user ? dashOptions() : null}
             </div>
             <div className="col-md-8 mt-5">
+<<<<<<< HEAD
                 {view === 2 ? currentView : view === 3 ? readView : view === 1 ? wantView
+=======
+                {view !== "dash" ? renderList
+>>>>>>> a96c05ff0ea647f1ed8c865e38a684f9eeffc965
                     :
                     <div className="card mb-5" style={{ width: '18rem' }}>
                         <div className="card-body">
