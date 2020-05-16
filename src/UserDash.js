@@ -22,7 +22,7 @@ function UserDash(props) {
         let list = tags.filter(tag => tag.tag_id === id)
         console.log(list)
         // setView(view)
-        list.map((book, index) => {
+        return list.map((book, index) => {
             return (
                 <div id={index} className="container mb-4">
                     <div className="row">
@@ -41,16 +41,19 @@ function UserDash(props) {
         })
     }
 
-
+    let renderList =[]
     function handleClick(id, view) {
         setView(view)
-        setList(id)
+       renderList = setList(id)
+        // technically this is not a state, should be renamed to generate list
     }
 
     
     function setGoal(id) {
         //what to call this now?
-        current = current.find(({book_id}) => book_id === id);
+        // why do you have so many function calls containing(({})) objects in parentheses???
+        let currentGoal = renderList.find(({book_id}) => book_id === id);
+        // find only returns one item
         props.storeGoal(current)
         handleClick("dash")
     }
@@ -150,7 +153,7 @@ function UserDash(props) {
                 {props.user ? dashOptions() : null}
             </div>
             <div className="col-md-8 mt-5">
-                {view === "current" || view === "want" || view === "read" ? setList()
+                {view !== "dash" ? renderList
                     :
                     <div className="card mb-5" style={{ width: '18rem' }}>
                         <div className="card-body">
