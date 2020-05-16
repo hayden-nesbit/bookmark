@@ -71,13 +71,6 @@ function App() {
     localStorage.setItem("bookData", JSON.stringify(props))
   }
 
-  // useEffect(() => {
-  //   if (userData) {
-  //     setUser(userData.user)
-  //     // setToken(userData.token)
-  //   }
-  // }, [user])
-
   return (
     <BrowserRouter>
       <ReactNav
@@ -94,8 +87,8 @@ function App() {
         <Route path='/books'>
           <BookView
             books={books}
-            // currentBook={currentBook}
-            // setCurrentBook={setCurrentBook}
+            currentBook={currentBook}
+            setCurrentBook={setCurrentBook}
             user={user}
             // token={token}
             setBookList={setBookList}
@@ -108,8 +101,8 @@ function App() {
           <Home
             setUserData={setUserData}
             user={user}
-            // currentBook={currentBook}
-            // storeCurrent={storeCurrent}
+            currentBook={currentBook}
+            storeCurrent={storeCurrent}
             storeBooks={storeBooks}
             setStart={setStart}
             setEnd={setEnd}
@@ -141,8 +134,8 @@ function Home(props) {
             <UserDash
               setUserData={props.setUserData}
               user={props.user}
-              // currentBook={props.currentBook}
-              // storeCurrent={props.storeCurrent}
+              currentBook={props.currentBook}
+              storeCurrent={props.storeCurrent}
               setStart={props.setStart}
               setEnd={props.setEnd}
               startDate={props.startDate}
@@ -159,8 +152,8 @@ function Home(props) {
           </Route>
           <Route path='/search'>
             <BookSearch
-              // currentBook={props.currentBook}
-              // storeCurrent={props.storeCurrent}
+              currentBook={props.currentBook}
+              storeCurrent={props.storeCurrent}
               books={props.books}
             >
             </BookSearch>

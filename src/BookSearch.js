@@ -8,12 +8,13 @@ function BookSearch(props) {
 
     const history = useHistory();
 
-    function handleClick(e) {
-        props.storeCurrent(e.target.id)
+    function handleClick(id) {
+        props.storeCurrent(id)
         history.push("/books")
     }
 
     let book = props.books ? props.books.map((item, index) => {
+        console.log(item)
         return (
             <div>
                 <div className="card border-0">
@@ -33,7 +34,7 @@ function BookSearch(props) {
                                 :
                                 null
                                 }
-                                <button id={index} onClick={handleClick} className="btn btn-outline-primary btn-sm">View</button>
+                                <button id={index} onClick={() => handleClick(index)} className="btn btn-outline-primary btn-sm">View</button>
                             </div>
                         </div>
                     </div>
