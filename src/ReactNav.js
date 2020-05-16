@@ -65,7 +65,6 @@ const Login = (props) => {
     };
     axios.post('http://127.0.0.1:8000/api/login', data)
       .then(response => {
-        console.log(response.data)
         props.setUserData(response.data)
         history.push("/dash")
       })
@@ -82,7 +81,6 @@ const Login = (props) => {
     axios.get('http://127.0.0.1:8000/api/logout', data)
       .then(response => {
         localStorage.clear();
-        console.log(response)
         history.push("/")
         props.clear({
           user: {},
@@ -95,7 +93,6 @@ const Login = (props) => {
         console.log(error);
       })
   }
-  console.log(props)
   return (
     <React.Fragment>
       {!props.user.token ?

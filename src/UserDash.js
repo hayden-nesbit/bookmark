@@ -11,47 +11,45 @@ function UserDash(props) {
     const [view, setView] = useState("dash")
 
     const user = props.user.user
-    console.log(user)
     let tags = props.tags ? props.tags.tags : props.user.user.tags
-    console.log(tags)
+
+    let want = tags.filter(tag => tag.tag_id === 1)
+    let current = tags.filter(tag => tag.tag_id === 2)
+    let read = tags.filter(tag => tag.tag_id === 3)
 
 
-    // const filteredList = (filterBy) => {
-    //     return listToFilterBy
-    //         .filter(item => item.toCompare === filterBy)
-    //         .map((item, index) => {
-    //             return (
-    //                 <div key={index}>
-    //                     {item.name}
-    //                 </div>
-    //             )
-    //         })
-    // }
-    // \\\\\
-    // { readNow ? filteredList("read-now") : filteredList("read-later") }
-
-
-    //array.filter 
-    let want = [];
-    let current = [];
-    let read = [];
-    for (let i = 0; i < tags.length; i++) {
-        if (tags[i].tag_id === 1) {
-            want.push(tags[i])
-        } else if (tags[i].tag_id === 2) {
-            current.push(tags[i])
-        } else if (tags[i].tag_id === 3) {
-            read.push(tags[i])
-        }
+    const setList = (id) => {
+        let list = tags.filter(tag => tag.tag_id === id)
+        console.log(list)
+        // setView(view)
+        list.map((book, index) => {
+            return (
+                <div id={index} className="container mb-4">
+                    <div className="row">
+                        <div className="col-sm-8">
+                            <b>{book.title}</b>, {book.author}
+                        </div>
+                        <div className="col-md-2 col-12">
+                            <button id={index} onClick={() => setGoal(book.book_id)} className="btn btn-outline-success btn-sm">Set Goal</button>
+                        </div>
+                        <div className="col-md-2 col-12">
+                            <button id={index} onClick={deleteBook} className="btn btn-outline-danger btn-sm">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
     }
-    console.log({ want, current, read })
 
-    function handleClick(view) {
+
+    function handleClick(id, view) {
         setView(view)
+        setList(id)
     }
 
     
     function setGoal(id) {
+        //what to call this now?
         current = current.find(({book_id}) => book_id === id);
         props.storeGoal(current)
         handleClick("dash")
@@ -60,13 +58,10 @@ function UserDash(props) {
     function deleteBook() {
     }
 
-    console.log(props.books)
-
     let days = props.bookList ? (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24) : 0
     let pages = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days)) : 0
     let minutes = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days) * 1.5) : 0
     let title = props.goal ? (props.goal.title) : "You have no current goals!" 
-
 
 
     const dashOptions = () => {
@@ -76,9 +71,9 @@ function UserDash(props) {
         let list3 = read ? read.length : 0
         return (
             <ul className="list-unstyled">
-                <li className="mb-3"><a href="#" onClick={() => handleClick("want")}>want-to-read ({list1})</a></li>
-                <li className="mb-3"><a href="#" onClick={() => handleClick("current")}>currently-reading ({list2})</a></li>
-                <li className="mb-3"><a href="#" onClick={() => handleClick("read")}>read ({list3})</a></li>
+                <li className="mb-3"><a href="#" onClick={() => handleClick(1, "want")}>want-to-read ({list1})</a></li>
+                <li className="mb-3"><a href="#" onClick={() => handleClick(2, "current")}>currently-reading ({list2})</a></li>
+                <li className="mb-3"><a href="#" onClick={() => handleClick(3, "read")}>read ({list3})</a></li>
                 {view === "dash" ?
                     null
                     :
@@ -91,60 +86,57 @@ function UserDash(props) {
         )
     }
 
-    let currentView = current.map((book, index) => {
-        console.log(book)
-        return (
-            <div id={index} className="container mb-4">
-                <div className="row">
-                    <div className="col-sm-8">
-                        <b>{book.title}</b>, {book.author}
-                    </div>
-                    <div className="col-md-2 col-12">
-                        <button id={index} onClick={() => setGoal(book.book_id)} className="btn btn-outline-success btn-sm">Set Goal</button>
-                    </div>
-                    <div className="col-md-2 col-12">
-                        <button id={index} onClick={deleteBook} className="btn btn-outline-danger btn-sm">Remove</button>
-                    </div>
-                </div>
-            </div>
-        )
-    })
-    let wantView = want.map((book, index) => {
-        console.log(book.title)
-        return (
-            <div id={index} className="container mb-4">
-                <div className="row">
-                    <div className="col-sm-8">
-                        <b>{book.title}</b>, {book.author}
-                    </div>
-                    <div className="col-md-2 col-12">
-                        <button id={index} onClick={handleClick} className="btn btn-outline-success btn-sm">Set Goal</button>
-                    </div>
-                    <div className="col-md-2 col-12">
-                        <button id={index} onClick={handleClick} className="btn btn-outline-danger btn-sm">Remove</button>
-                    </div>
-                </div>
-            </div>
-        )
-    })
-    let readView = read.map((book, index) => {
-        console.log(book.title)
-        return (
-            <div id={index} className="container mb-4">
-                <div className="row">
-                    <div className="col-sm-8">
-                        <b>{book.title}</b>, {book.author}
-                    </div>
-                    <div className="col-md-2 col-12">
-                        <button id={index} onClick={handleClick} className="btn btn-outline-success btn-sm">Set Goal</button>
-                    </div>
-                    <div className="col-md-2 col-12">
-                        <button id={index} onClick={handleClick} className="btn btn-outline-danger btn-sm">Remove</button>
-                    </div>
-                </div>
-            </div>
-        )
-    })
+    // let currentView = current.map((book, index) => {
+    //     return (
+    //         <div id={index} className="container mb-4">
+    //             <div className="row">
+    //                 <div className="col-sm-8">
+    //                     <b>{book.title}</b>, {book.author}
+    //                 </div>
+    //                 <div className="col-md-2 col-12">
+    //                     <button id={index} onClick={() => setGoal(book.book_id)} className="btn btn-outline-success btn-sm">Set Goal</button>
+    //                 </div>
+    //                 <div className="col-md-2 col-12">
+    //                     <button id={index} onClick={deleteBook} className="btn btn-outline-danger btn-sm">Remove</button>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     )
+    // })
+    // let wantView = want.map((book, index) => {
+    //     return (
+    //         <div id={index} className="container mb-4">
+    //             <div className="row">
+    //                 <div className="col-sm-8">
+    //                     <b>{book.title}</b>, {book.author}
+    //                 </div>
+    //                 <div className="col-md-2 col-12">
+    //                     <button id={index} onClick={handleClick} className="btn btn-outline-success btn-sm">Set Goal</button>
+    //                 </div>
+    //                 <div className="col-md-2 col-12">
+    //                     <button id={index} onClick={handleClick} className="btn btn-outline-danger btn-sm">Remove</button>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     )
+    // })
+    // let readView = read.map((book, index) => {
+    //     return (
+    //         <div id={index} className="container mb-4">
+    //             <div className="row">
+    //                 <div className="col-sm-8">
+    //                     <b>{book.title}</b>, {book.author}
+    //                 </div>
+    //                 <div className="col-md-2 col-12">
+    //                     <button id={index} onClick={handleClick} className="btn btn-outline-success btn-sm">Set Goal</button>
+    //                 </div>
+    //                 <div className="col-md-2 col-12">
+    //                     <button id={index} onClick={handleClick} className="btn btn-outline-danger btn-sm">Remove</button>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     )
+    // })
 
     return (
         <div className="row">
@@ -158,7 +150,7 @@ function UserDash(props) {
                 {props.user ? dashOptions() : null}
             </div>
             <div className="col-md-8 mt-5">
-                {view === "current" ? currentView : view === "want" ? wantView : view === "read" ? readView
+                {view === "current" || view === "want" || view === "read" ? setList()
                     :
                     <div className="card mb-5" style={{ width: '18rem' }}>
                         <div className="card-body">
