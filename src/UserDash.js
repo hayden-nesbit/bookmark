@@ -21,8 +21,9 @@ function UserDash(props) {
     let want = tags.filter(tag => tag.tag_id === 1)
     let current = tags.filter(tag => tag.tag_id === 2)
     let read = tags.filter(tag => tag.tag_id === 3)
+    // let tagView = tags.filter(tag => tag.tag_id === view)
+    // console.log(tagView)
 
-<<<<<<< HEAD
     function deleteBook(id, user) {
         console.log(id)
         const data = {
@@ -73,48 +74,11 @@ function UserDash(props) {
         // renderList = setList(id)
     }
 
-=======
-
-    const setList = (id) => {
-        let list = tags.filter(tag => tag.tag_id === id)
-        console.log(list)
-        // setView(view)
-        return list.map((book, index) => {
-            return (
-                <div id={index} className="container mb-4">
-                    <div className="row">
-                        <div className="col-sm-8">
-                            <b>{book.title}</b>, {book.author}
-                        </div>
-                        <div className="col-md-2 col-12">
-                            <button id={index} onClick={() => setGoal(book.book_id)} className="btn btn-outline-success btn-sm">Set Goal</button>
-                        </div>
-                        <div className="col-md-2 col-12">
-                            <button id={index} onClick={deleteBook} className="btn btn-outline-danger btn-sm">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            )
-        })
+    function clearGoal(id) {
+        console.log(id)
+        props.storeGoal("")
     }
 
-    let renderList =[]
-    function handleClick(id, view) {
-        setView(view)
-       renderList = setList(id)
-        // technically this is not a state, should be renamed to generate list
-    }
-
-    
-    function setGoal(id) {
-        //what to call this now?
-        // why do you have so many function calls containing(({})) objects in parentheses???
-        let currentGoal = renderList.find(({book_id}) => book_id === id);
-        // find only returns one item
-        props.storeGoal(current)
-        handleClick("dash")
-    }
->>>>>>> a96c05ff0ea647f1ed8c865e38a684f9eeffc965
 
     function setGoal(id, arr) {
         // let currentGoal = renderList.find(({book_id}) => book_id === id);
@@ -140,12 +104,12 @@ function UserDash(props) {
                 <li className="mb-3"><a href="#" onClick={() => handleClick(1)}>want-to-read ({list1})</a></li>
                 <li className="mb-3"><a href="#" onClick={() => handleClick(2)}>currently-reading ({list2})</a></li>
                 <li className="mb-3"><a href="#" onClick={() => handleClick(3)}>read ({list3})</a></li>
-                {view === "dash" ?
+                {view === 0 ?
                     null
                     :
                     <div>
                         <br />
-                        <li className="mb-3"><a href="#" onClick={() => handleClick("dash")}><FontAwesomeIcon icon={faArrowAltCircleLeft} size="lg" /></a></li>
+                        <li className="mb-3"><a href="#" onClick={() => handleClick(0)}><FontAwesomeIcon icon={faArrowAltCircleLeft} size="lg" /></a></li>
                     </div>
                 }
             </ul>
@@ -185,15 +149,14 @@ function UserDash(props) {
                         <b>{book.title}</b>, {book.author}
                     </div>
                     <div className="col-md-2 col-12">
-                        <UpdateButton 
+                        <UpdateButton
                             user={props.user}
                             view={view}
                             book={book.book_id}
-                            storeTags={props.storeTags}
-                        />
+                            storeTags={props.storeTags} />
                     </div>
                     <div className="col-md-2 col-12">
-                        <button id={index} onClick={() => setGoal(book.book_id, current)} className="btn btn-success btn-sm">Set Goal</button>
+                        <button id={index} onClick={() => setGoal(book.book_id, want)} className="btn btn-success btn-sm">Set Goal</button>
                     </div>
                     <div className="col-md-2 col-12">
                         <button id={index} onClick={() => deleteBook(book.book_id, user.id)} className="btn btn-danger btn-sm">Remove</button>
@@ -210,15 +173,14 @@ function UserDash(props) {
                         <b>{book.title}</b>, {book.author}
                     </div>
                     <div className="col-md-2 col-12">
-                        <UpdateButton 
+                        <UpdateButton
                             user={props.user}
                             view={view}
                             book={book.book_id}
-                            storeTags={props.storeTags}
-                        />
+                            storeTags={props.storeTags} />
                     </div>
                     <div className="col-md-2 col-12">
-                        <button id={index} onClick={() => setGoal(book.book_id, current)} className="btn btn-success btn-sm">Set Goal</button>
+                        <button id={index} onClick={() => setGoal(book.book_id, read)} className="btn btn-success btn-sm">Set Goal</button>
                     </div>
                     <div className="col-md-2 col-12">
                         <button id={index} onClick={() => deleteBook(book.book_id, user.id)} className="btn btn-danger btn-sm">Remove</button>
@@ -240,11 +202,7 @@ function UserDash(props) {
                 {props.user ? dashOptions() : null}
             </div>
             <div className="col-md-8 mt-5">
-<<<<<<< HEAD
-                {view === 2 ? currentView : view === 3 ? readView : view === 1 ? wantView
-=======
-                {view !== "dash" ? renderList
->>>>>>> a96c05ff0ea647f1ed8c865e38a684f9eeffc965
+                {view === 1 ? wantView : view === 2 ? currentView : view === 3 ? readView
                     :
                     <div className="card mb-5" style={{ width: '18rem' }}>
                         <div className="card-body">
@@ -263,6 +221,8 @@ function UserDash(props) {
                                 <div className="form-check pb-5 text-center">
                                     <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                                 </div>
+                                {props.goal ?
+                                <div>
                                 <DatePicker
                                     onChange={date => props.setStart(date)}
                                     placeholderText="Select a start date"
@@ -281,6 +241,11 @@ function UserDash(props) {
                                     endDate={props.endDate}
                                     minDate={props.startDate}
                                 />
+                                <button onClick={() => clearGoal(props.goal.id)} className="btn btn-danger btn-sm text-center mt-3">Clear goal</button>
+                                </div>
+                                :
+                                null
+                                }
                             </div>
                         </div>
                     </div>
