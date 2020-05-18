@@ -7,6 +7,8 @@ import { faArrowAltCircleLeft, faSurprise } from '@fortawesome/free-solid-svg-ic
 import axios from 'axios';
 import UpdateButton from './UpdateButton.js'
 import { useHistory } from "react-router-dom"
+import './UserDash.css'
+// import Carousel from './GoalCaro.js'
 
 
 function UserDash(props) {
@@ -76,22 +78,96 @@ function UserDash(props) {
 
     function clearGoal(id) {
         console.log(id)
-        props.storeGoal("")
+        let update = props.goal.filter(goal => goal.id !== id)
+        props.storeGoal(update)
+        //change to remove item
+        props.setEnd("")
+
     }
 
 
     function setGoal(id, arr) {
         // let currentGoal = renderList.find(({book_id}) => book_id === id);
-        let goal = arr.find(({ book_id }) => book_id === id);
-        props.storeGoal(goal)
+        let newGoal = [];
+        newGoal = arr.find(({ book_id }) => book_id === id)
+
+        // props.setGoal(newGoal)
+
+        // props.storeGoal([...props.goal, {goal: newGoal}]);
+        props.storeGoal((props.goal).concat(newGoal))
+
+
         handleClick(0)
     }
 
 
-    let days = props.bookList ? (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24) : 0
-    let pages = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days)) : 0
-    let minutes = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days) * 1.5) : 0
-    let title = props.goal ? (props.goal.title) : "You have no current goals!"
+
+
+    let days = props.endDate ? (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24) : 0
+    // let pages = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days)) : 0
+    // let minutes = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days) * 1.5) : 0
+    // let title = props.goal ? (props.goal.title) : "You have no current goals!"
+
+    let goalView = props.goal.length ? props.goal.map((item, index) => {
+        return (
+            <div id={index} className="card mb-5" style={{ width: '18rem' }}>
+                <div className="card-body bg-light">
+
+                    <div>
+                        <h5 className="card-title text-center">
+                            {item.title}
+                        </h5>
+                        {days === 0 ? null
+                            :
+                            <>
+                                <h1 className="card-title text-center display-1">
+                                    {Math.ceil(item.pageCount / days)}
+                                </h1>
+                                <h5 className="card-subtitle mb-2 text-muted text-center">pages/day</h5>
+                                <hr />
+                                <h3 className="card-subtitle mb-2 text-muted text-center">{Math.ceil((item.pageCount / days) * 1.5)} </h3>
+                                <h6 className="card-subtitle mb-2 text-muted text-center">min/day</h6>
+                                <div className="form-check pb-5 text-center">
+                                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                                </div>
+                            </>
+                        }
+
+                        {props.goal ?
+                            <div>
+                                <DatePicker
+                                    onChange={date => props.setStart(date)}
+                                    placeholderText="Select a start date"
+                                    selected={props.startDate}
+                                    selectsStart
+                                    startDate={props.startDate}
+                                    endDate={props.endDate}
+
+                                />
+                                <DatePicker
+                                    onChange={date => props.setEnd(date)}
+                                    placeholderText="Select an end date"
+                                    selected={props.endDate}
+                                    selectsEnd
+                                    startDate={props.startDate}
+                                    endDate={props.endDate}
+                                    minDate={props.startDate}
+                                />
+                                <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
+                            </div>
+                            :
+                            null
+                        }
+                    </div>
+                </div>
+            </div>
+        )
+    })
+        :
+        <h4>You have no current goals!</h4>
+
+    console.log(props.goal)
+
 
 
     const dashOptions = () => {
@@ -122,7 +198,7 @@ function UserDash(props) {
             <div id={index} className="container mb-4">
                 <div className="row">
                     <div className="col-sm-6">
-                        <b>{book.title}</b>, {book.author}
+                        <i>{book.title}</i>, {book.author}
                     </div>
                     <div className="col-md-2 col-12">
                         <UpdateButton
@@ -146,7 +222,7 @@ function UserDash(props) {
             <div id={index} className="container mb-4">
                 <div className="row">
                     <div className="col-sm-6">
-                        <b>{book.title}</b>, {book.author}
+                        <i>{book.title}</i>, {book.author}
                     </div>
                     <div className="col-md-2 col-12">
                         <UpdateButton
@@ -170,7 +246,7 @@ function UserDash(props) {
             <div id={index} className="container mb-4">
                 <div className="row">
                     <div className="col-sm-6">
-                        <b>{book.title}</b>, {book.author}
+                        <i>{book.title}</i>, {book.author}
                     </div>
                     <div className="col-md-2 col-12">
                         <UpdateButton
@@ -201,54 +277,17 @@ function UserDash(props) {
                 <br />
                 {props.user ? dashOptions() : null}
             </div>
-            <div className="col-md-8 mt-5">
+            <div id="goalScroll" className="col-md-8 mt-5">
                 {view === 1 ? wantView : view === 2 ? currentView : view === 3 ? readView
                     :
-                    <div className="card mb-5" style={{ width: '18rem' }}>
-                        <div className="card-body">
-
-                            <div>
-                                <h5 className="card-title text-center">
-                                    {title}
-                                </h5>
-                                <h1 className="card-title text-center display-1">
-                                    {pages}
-                                </h1>
-                                <h5 className="card-subtitle mb-2 text-muted text-center">pages/day</h5>
-                                <hr />
-                                <h3 className="card-subtitle mb-2 text-muted text-center">{minutes} </h3>
-                                <h6 className="card-subtitle mb-2 text-muted text-center">min/day</h6>
-                                <div className="form-check pb-5 text-center">
-                                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                </div>
-                                {props.goal ?
-                                <div>
-                                <DatePicker
-                                    onChange={date => props.setStart(date)}
-                                    placeholderText="Select a start date"
-                                    selected={props.startDate}
-                                    selectsStart
-                                    startDate={props.startDate}
-                                    endDate={props.endDate}
-
-                                />
-                                <DatePicker
-                                    onChange={date => props.setEnd(date)}
-                                    placeholderText="Select an end date"
-                                    selected={props.endDate}
-                                    selectsEnd
-                                    startDate={props.startDate}
-                                    endDate={props.endDate}
-                                    minDate={props.startDate}
-                                />
-                                <button onClick={() => clearGoal(props.goal.id)} className="btn btn-danger btn-sm text-center mt-3">Clear goal</button>
-                                </div>
-                                :
-                                null
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <>
+                    {goalView}
+                    {/* <Carousel 
+                        endDate={props.endDate}
+                        goal={props.goal}
+                    /> */}
+                    </>
+                    
                 }
             </div>
         </div>

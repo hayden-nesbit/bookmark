@@ -25,7 +25,7 @@ function App() {
   const [endDate, setEndDate] = useState(new Date());
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
-  const [goal, setGoal] = useState(JSON.parse(localStorage.getItem("goal")));
+  const [goal, setGoal] = useState(JSON.parse(localStorage.getItem("goalData")));
  
   function storeTags(props) {
     setTags(props)
@@ -33,8 +33,9 @@ function App() {
   }
 
   function storeGoal(props) {
+    // setGoal(props => props.concat(JSON.parse(goal.data)));
     setGoal(props)
-    localStorage.setItem("goal", JSON.stringify(props))
+    localStorage.setItem("goalData", JSON.stringify(props))
   }
   
   function setUserData(userFromApi) {
@@ -147,7 +148,7 @@ function Home(props) {
               storeTags={props.storeTags}
               goal={props.goal}
               storeGoal={props.storeGoal}
-            >
+                >
             </UserDash>
           </Route>
           <Route path='/search'>
