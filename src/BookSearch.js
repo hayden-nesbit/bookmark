@@ -14,7 +14,6 @@ function BookSearch(props) {
     }
 
     let book = props.books ? props.books.map((item, index) => {
-        console.log(item)
         return (
             <div>
                 <div className="card border-0">

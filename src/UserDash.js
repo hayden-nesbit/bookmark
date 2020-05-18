@@ -13,6 +13,22 @@ import './UserDash.css'
 
 function UserDash(props) {
 
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+
+    function setStart(props) {
+        //add axios call to add date into DB
+        setStartDate(props)
+        localStorage.setItem("startDate", JSON.stringify(props))
+    }
+
+    function setEnd(props, id) {
+        //add axios call to add date into DB
+        setEndDate(props)
+        sendGoal(props, id)
+        localStorage.setItem("endDate", JSON.stringify(props))
+    }
+
     const [view, setView] = useState(0)
     const history = useHistory();
 
@@ -23,7 +39,9 @@ function UserDash(props) {
     let want = tags.filter(tag => tag.tag_id === 1)
     let current = tags.filter(tag => tag.tag_id === 2)
     let read = tags.filter(tag => tag.tag_id === 3)
-    // let tagView = tags.filter(tag => tag.tag_id === view)
+
+    //
+    //
     // console.log(tagView)
 
     function deleteBook(id, user) {
@@ -70,55 +88,84 @@ function UserDash(props) {
     // }
 
 
-    // let renderList =[]
+    // let renderList = props.goal
     function handleClick(view) {
         setView(view)
         // renderList = setList(id)
+        //generate arrays here 
+        // renderList = tags.filter(tag => tag.tag_id === view)
+
     }
 
     function clearGoal(id) {
-        console.log(id)
+        console.log(props.goal)
         let update = props.goal.filter(goal => goal.id !== id)
+        console.log(update)
         props.storeGoal(update)
         //change to remove item
-        props.setEnd("")
-
+        // setEnd("")
     }
 
+    console.log(props.goal)
 
     function setGoal(id, arr) {
-        // let currentGoal = renderList.find(({book_id}) => book_id === id);
         let newGoal = [];
-        newGoal = arr.find(({ book_id }) => book_id === id)
+        newGoal.push(arr.find(({ book_id }) => book_id === id))
+        console.log(newGoal)
 
-        // props.setGoal(newGoal)
-
-        // props.storeGoal([...props.goal, {goal: newGoal}]);
-        props.storeGoal((props.goal).concat(newGoal))
-
+        props.goal !== null ?
+            props.storeGoal((props.goal).concat(newGoal))
+            :
+            props.storeGoal(newGoal)
 
         handleClick(0)
     }
 
+    function sendGoal(endDate, id) {
+        const data = {
+            headers: { Authorization: "Bearer " + props.user.token },
+            book_id: id,
+            user_id: user.id,
+            // start_date: startDate,
+            end_date: endDate,
+        }
+        console.log(data)
+        axios.post('http://127.0.0.1:8000/api/setGoal', data)
+            .then(function (response) {
+                // let tags = response.data.tags
+                // console.log(tags)
+                let remove = [];
+                remove = props.goal.filter(goal => goal.id !== id)
+                remove.push(response.data.tags.find(({ book_id }) => book_id === id))
+                console.log(remove)
+                props.storeGoal(remove)
 
 
 
-    let days = props.endDate ? (props.endDate.getTime() - props.startDate.getTime()) / (1000 * 3600 * 24) : 0
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+    // let days = endDate ? (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) : 0
     // let pages = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days)) : 0
     // let minutes = props.bookList && props.goal ? (Math.ceil(props.goal.pageCount / days) * 1.5) : 0
     // let title = props.goal ? (props.goal.title) : "You have no current goals!"
 
-    let goalView = props.goal.length ? props.goal.map((item, index) => {
+
+    let goalView = props.goal ? props.goal.map((item, index) => {
+        let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+       
         return (
             <div id={index} className="card mb-5" style={{ width: '18rem' }}>
                 <div className="card-body bg-light">
-
                     <div>
                         <h5 className="card-title text-center">
                             {item.title}
                         </h5>
-                        {days === 0 ? null
-                            :
+                        {days !== 0 ? 
                             <>
                                 <h1 className="card-title text-center display-1">
                                     {Math.ceil(item.pageCount / days)}
@@ -131,33 +178,30 @@ function UserDash(props) {
                                     <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                                 </div>
                             </>
-                        }
-
-                        {props.goal ?
-                            <div>
-                                <DatePicker
-                                    onChange={date => props.setStart(date)}
-                                    placeholderText="Select a start date"
-                                    selected={props.startDate}
-                                    selectsStart
-                                    startDate={props.startDate}
-                                    endDate={props.endDate}
-
-                                />
-                                <DatePicker
-                                    onChange={date => props.setEnd(date)}
-                                    placeholderText="Select an end date"
-                                    selected={props.endDate}
-                                    selectsEnd
-                                    startDate={props.startDate}
-                                    endDate={props.endDate}
-                                    minDate={props.startDate}
-                                />
-                                <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
-                            </div>
                             :
                             null
                         }
+
+                        <div>
+                            <DatePicker
+                                onChange={date => setStart(date)}
+                                placeholderText="Select a start date"
+                                selected={startDate}
+                                selectsStart
+                                startDate={startDate}
+                                endDate={endDate}
+                            />
+                            <DatePicker
+                                onChange={date => setEnd(date, item.book_id)}
+                                placeholderText="Select an end date"
+                                selected={endDate}
+                                selectsEnd
+                                startDate={startDate}
+                                endDate={endDate}
+                                minDate={startDate}
+                            />
+                            <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,7 +210,7 @@ function UserDash(props) {
         :
         <h4>You have no current goals!</h4>
 
-    console.log(props.goal)
+
 
 
 
@@ -281,13 +325,13 @@ function UserDash(props) {
                 {view === 1 ? wantView : view === 2 ? currentView : view === 3 ? readView
                     :
                     <>
-                    {goalView}
-                    {/* <Carousel 
+                        {goalView}
+                        {/* <Carousel 
                         endDate={props.endDate}
                         goal={props.goal}
                     /> */}
                     </>
-                    
+
                 }
             </div>
         </div>

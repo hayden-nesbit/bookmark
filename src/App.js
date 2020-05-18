@@ -21,8 +21,6 @@ function App() {
   const [user, setUser] = useState(userData);
   const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tagData")));
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
   const [goal, setGoal] = useState(JSON.parse(localStorage.getItem("goalData")));
@@ -43,17 +41,6 @@ function App() {
     localStorage.setItem("userData", JSON.stringify(userFromApi))
   }
 
-  function setStart(props) {
-    //add axios call to add date into DB
-    setStartDate(props)
-    localStorage.setItem("startDate", JSON.stringify(props))
-  }
-
-  function setEnd(props) {
-    //add axios call to add date into DB
-    setEndDate(props)
-    localStorage.setItem("endDate", JSON.stringify(props))
-  }
 
   function clearLocalStorage(props) {
     setUser(props.user)
@@ -105,10 +92,10 @@ function App() {
             currentBook={currentBook}
             storeCurrent={storeCurrent}
             storeBooks={storeBooks}
-            setStart={setStart}
-            setEnd={setEnd}
-            startDate={startDate}
-            endDate={endDate}
+            // setStart={setStart}
+            // setEnd={setEnd}
+            // startDate={startDate}
+            // endDate={endDate}
             bookList={bookList}
             setBookList={setBookList}
             books={books}
@@ -137,10 +124,10 @@ function Home(props) {
               user={props.user}
               currentBook={props.currentBook}
               storeCurrent={props.storeCurrent}
-              setStart={props.setStart}
-              setEnd={props.setEnd}
-              startDate={props.startDate}
-              endDate={props.endDate}
+              // setStart={props.setStart}
+              // setEnd={props.setEnd}
+              // startDate={props.startDate}
+              // endDate={props.endDate}
               bookList={props.bookList}
               setBookList={props.setBookList}
               books={props.books}
