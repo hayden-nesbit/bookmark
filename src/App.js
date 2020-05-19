@@ -23,7 +23,9 @@ function App() {
   const [books, setBooks] = useState(JSON.parse(localStorage.getItem("bookData")));
   const [bookList, setBookList] = useState([]);
   const [currentBook, setCurrentBook] = useState(JSON.parse(localStorage.getItem("CurrentBookId")));
-  const [goal, setGoal] = useState(JSON.parse(localStorage.getItem("goalData")));
+  var goalData = JSON.parse(localStorage.getItem("goalData"));
+  goalData = goalData ? goalData : []
+  const [goal, setGoal] = useState(goalData);
  
   function storeTags(props) {
     setTags(props)
