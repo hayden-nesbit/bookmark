@@ -31,7 +31,6 @@ const ShelfButton = (props) => {
       .then(function (response) {
         props.setBookList(response.data)
         props.storeTags(response.data)
-        console.log(response.data);
         history.push("/dash")
 
       })

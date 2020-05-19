@@ -1,4 +1,10 @@
-/* #goalScroll {
-    overflow: scroll;
-    max-height: 50vh;
-} */
+#goalScroll {
+    width: 100px;
+    height: 525px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#switchButton {
+    max-height: 0px;
+}

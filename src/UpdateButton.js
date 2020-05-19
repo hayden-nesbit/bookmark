@@ -10,23 +10,19 @@ const UpdateButton = (props) => {
 
   const toggle = () => setOpen(!dropdownOpen);
 
-  function updateBook(id) {
+  function updateBook(id, view) {
     
     const data = {
-    //   headers: { Authorization: "Bearer " + props.user.token },
         tag_id: id,
         book_id: props.book,
         prev_tag: props.view,
         user_id: props.user.user.id
       }
-      console.log(data)
-    //   console.log(props.user.user)
+    
     axios.post('http://127.0.0.1:8000/api/updateBook', data)
       .then(function (response) {
-        // props.setBookList(response.data)
         props.storeTags(response.data)
-        console.log(response.data);
-        // history.push("/dash")
+        props.showView(view)
 
       })
       .catch(function (error) {
