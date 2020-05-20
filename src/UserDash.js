@@ -3,11 +3,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowAltCircleLeft, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleLeft} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import UpdateButton from './UpdateButton.js'
+// import UpdateButton from './UpdateButton.js'
 import './UserDash.css'
 import Toggle from './Toggle.js';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
 
 
 function UserDash(props) {
@@ -52,7 +54,6 @@ function UserDash(props) {
         await axios.post('http://127.0.0.1:8000/api/deleteBook', data)
             .then(function (response) {
                 props.storeTags(response.data)
-                console.log(response.data);
                 tags = response.data.tags
                 showView(view)
 
@@ -60,7 +61,6 @@ function UserDash(props) {
             .catch(function (error) {
                 console.log(error);
             });
-        console.log(props)
     }
 
 
@@ -137,7 +137,6 @@ function UserDash(props) {
 
         return (
             <div id={index} className="card border-primary mb-5" style={{ width: '18rem' }}>
-                {/* <img class="card-img-top" src={item.image} style={{ height: '8rem' }} alt="Card image cap" /> */}
                 <div className="card-body">
                     <div>
                         <h5 className="card-title text-center">
@@ -206,12 +205,56 @@ function UserDash(props) {
         setView(view)
     }
     console.log(renderList)
+    
 
+    const UpdateButton = (props) => {
+        //   const history = useHistory();
+          const [dropdownOpen, setOpen] = useState(false);
+          
+        
+          const toggle = () => setOpen(!dropdownOpen);
+        
+          async function updateBook(id) {
+            
+            const data = {
+                tag_id: id,
+                book_id: props.book,
+                prev_tag: view,
+                user_id: user.id
+              }
+            console.log(data)
+            await axios.post('http://127.0.0.1:8000/api/updateBook', data)
+              .then(function (response) {
+                props.storeTags(response.data)
+                tags = response.data.tags
+                showView(props.view)
+                console.log(props.tags)
+                
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+        
+            return (
+              <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+                <DropdownToggle caret size="sm">
+                  Update
+              </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => updateBook(1)}>want-to-read</DropdownItem>
+                  <DropdownItem onClick={() => updateBook(2)}>currently-reading</DropdownItem>
+                  <DropdownItem onClick={() => updateBook(3)}>read</DropdownItem>
+        
+                </DropdownMenu>
+              </ButtonDropdown>
+            );
+          }
 
     const dashOptions = () => {
         return (
             <ul className="list-unstyled">
-                <li className="mb-3 active"><a href="#" onClick={() => showView(1)}>want-to-read ({tags.filter(tag => tag.tag_id === 1).length})</a></li>
+                <li className="mb-3"><a href="#" onClick={() => showView(1)}>want-to-read ({tags.filter(tag => tag.tag_id === 1).length})</a></li>
                 <li className="mb-3"><a href="#" onClick={() => showView(2)}>currently-reading ({tags.filter(tag => tag.tag_id === 2).length})</a></li>
                 <li className="mb-3"><a href="#" onClick={() => showView(3)}>read ({tags.filter(tag => tag.tag_id === 3).length})</a></li>
                 {view === 0 ?
@@ -248,7 +291,8 @@ function UserDash(props) {
                     {props.user ? dashOptions() : null}
                 </div>
                 <div id="goalScroll" className="col-md-8 mt-5">
-                    {view !== 0 && renderList.length > 0
+                    {view !== 0 
+                    /* && renderList.length > 0 */
                         ?
                         renderList.map((book, index) => {
                             console.log(book)
@@ -265,7 +309,10 @@ function UserDash(props) {
                                                 book={book.book_id}
                                                 storeTags={props.storeTags}
                                                 showView={showView}
-                                                id={book.tag_id} />
+                                                id={book.tag_id}
+                                                tags={tags}
+                                
+                                                 />
                                         </div>
                                         <div className="col-md-2 col-12">
                                             <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm mt-1">Set Goal</button>
@@ -281,12 +328,7 @@ function UserDash(props) {
                         :
                         <>
                             {goalView}
-                            {/* <Carousel 
-                        endDate={props.endDate}
-                        goal={props.goal}
-                    /> */}
                         </>
-
                     }
                 </div>
             </div>
@@ -294,6 +336,8 @@ function UserDash(props) {
 
 
     )
+
+    
 
 
 }
