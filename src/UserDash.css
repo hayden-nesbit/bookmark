@@ -1,8 +1,7 @@
 #goalScroll {
-    width: 400px;
-    max-height: 500px;
+    max-height: 400px;
     overflow-x:scroll;
-    overflow-y:visible;
+    overflow-y:hidden;
 }
 
 #switchButton {
@@ -11,4 +10,13 @@
 
 #booktable:hover {
   background-color: rgb(248, 246, 246);
+}
+
+.card {
+  max-height: 400px;
+  min-height: 400px;
+}
+
+h5 {
+  min-height: 48px;
 }

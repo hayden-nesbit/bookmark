@@ -13,6 +13,7 @@ import {
   Route,
   Link,
 } from "react-router-dom";
+import './App.css'
 
 function App() {
 
@@ -116,7 +117,6 @@ function App() {
 }
 function Home(props) {
   return (
-    <div>
       <div id="main" className="container mt-4">
         <SearchBar storeBooks={props.storeBooks} />
         <Switch>
@@ -150,7 +150,6 @@ function Home(props) {
           </Route>
         </Switch>
       </div>
-    </div>
   )
 }
 
