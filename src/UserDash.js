@@ -39,6 +39,8 @@ function UserDash(props) {
     const user = props.user.user
     let tags = props.tags ? props.tags.tags : props.user.user.tags
 
+
+
     // async function axiosTags(id, user, view) {
     //     const data = {
     //             headers: { Authorization: "Bearer " + props.user.token },
@@ -76,8 +78,39 @@ function UserDash(props) {
             });
     }
 
+    async function updatePage(id, newPage, index) {
 
-    function handleClick(view, check, id) {
+        const data = {
+            id: id,
+            pageCount: newPage,
+            user_id: user.id
+        }
+        await axios.post('http://127.0.0.1:8000/api/updatePage', data)
+            .then(function (response) {
+                let remove = [];
+                remove = props.goal.filter(goal => goal.id !== id)
+                remove.splice(index, 0, response.data.tags.find(({ book_id }) => book_id === id))
+                // props.storeGoal(remove)
+                console.log(remove)
+
+                let notes = ["Great job!", "Good work today!", "Awesome! See you tomorrow!", "One day closer!", "You're on a roll!", "Nice!"]
+                let note = notes[Math.floor(Math.random() * notes.length)];
+                let tempGoal = [...remove]
+                for (let goal of tempGoal) {
+                    if (goal.id === id) {
+                        goal.phrase = note
+                    }
+                }
+                props.storeGoal(tempGoal)
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+    function handleClick(view, check, id, index, days) {
         setView(view)
         setCheck(check)
 
@@ -89,8 +122,13 @@ function UserDash(props) {
             :
             setCheckId(newCheck)
 
-    }
+        let perDiem = (Math.ceil((props.goal[index].pageCount) / days))
+        let newPage = (props.goal[index].pageCount) - perDiem
+        console.log(newPage)
 
+        updatePage(id, newPage, index)
+
+    }
 
     function clearGoal(id) {
         let update = props.goal.filter(goal => goal.id !== id)
@@ -137,20 +175,16 @@ function UserDash(props) {
             setMeasure(true)
     }
 
+
+
     let goalView = props.goal.length > 0 ? props.goal.map((item, index) => {
         let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
-        let end = item.end_date !== startDate ? new Date(item.end_date) : endDate
+        // let end = item.end_date !== startDate ? new Date(item.end_date) : startDate
 
-        // console.log(new Date(item.end_date))
-        // console.log(startDate)
-        // console.log(endDate)
-
-        let responses = ["Nice job!", "Good work today!", "Awesome! See you tomorrow!", "One day closer!"]
-        let response = responses[Math.floor(Math.random() * responses.length)];
 
         return (
-            <div className="col">
-                <div id={index} className="card bg-light mb-5" style={{ width: '18rem' }}>
+            <div id={index} className="col">
+                <div id="goalCard" className="card bg-light mb-5" style={{ width: '18rem' }}>
                     <div className="card-body">
                         <div>
                             <h5 className="card-title text-center">
@@ -160,51 +194,50 @@ function UserDash(props) {
                                 <>
                                     <div className="text-primary text-center">
                                         <FontAwesomeIcon icon={faThumbsUp} size="5x" />
-                                        <h4 className="text-center mt-5 mb-5">{response}</h4>
+                                        <h4 className="text-center mt-5 mb-5">{item.phrase ? item.phrase : null}</h4>
                                         {/* <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button> */}
                                     </div>
                                 </>
+                                    :
+                                    <>
+                                        {measure === false ?
+                                            <>
+                                                <h1 className="card-title text-center display-1 text-primary">
+                                                    {Math.ceil(item.pageCount / days)}
+                                                </h1>
+                                                <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
+                                            </>
+                                            :
+                                            <>
+                                                <h1 className="card-title text-center display-1 text-primary">{Math.ceil((item.pageCount / days) * 1.5)} </h1>
+                                                <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
+                                            </>
+                                        }
+                                        <div className="form-check pb-5 text-center">
+                                            <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
+                                        </div>
 
-                                :
-                                <>
-                                    {measure === false ?
-                                        <>
-                                            <h1 className="card-title text-center display-1 text-primary">
-                                                {Math.ceil(item.pageCount / days)}
-                                            </h1>
-                                            <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
-                                        </>
-                                        :
-                                        <>
-                                            <h1 className="card-title text-center display-1 text-primary">{Math.ceil((item.pageCount / days) * 1.5)} </h1>
-                                            <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
-                                        </>
-                                    }
-                                    <div className="form-check pb-5 text-center">
-                                        <input type="checkbox" onClick={() => handleClick(0, true, item.id)} className="form-check-input" id="exampleCheck1" />
-                                    </div>
-
-                                    <div>
-                                        <DatePicker
-                                            onChange={date => setStart(date)}
-                                            placeholderText="Select a start date"
-                                            selected={startDate}
-                                            selectsStart
-                                            startDate={startDate}
-                                            endDate={endDate}
-                                        />
-                                        <DatePicker
-                                            onChange={date => setEnd(date, item.book_id, index)}
-                                            placeholderText="Select an end date"
-                                            selected={endDate}
-                                            selectsEnd
-                                            startDate={startDate}
-                                            endDate={end}
-                                            minDate={startDate}
-                                        />
-                                        <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
-                                    </div>
-                                </>
+                                        <div>
+                                            <DatePicker
+                                                onChange={date => setStart(date)}
+                                                placeholderText="Select a start date"
+                                                selected={startDate}
+                                                selectsStart
+                                                startDate={startDate}
+                                                endDate={endDate}
+                                            />
+                                            <DatePicker
+                                                onChange={date => setEnd(date, item.book_id, index)}
+                                                placeholderText="Select an end date"
+                                                selected={endDate}
+                                                selectsEnd
+                                                startDate={startDate}
+                                                endDate={endDate}
+                                                minDate={startDate}
+                                            />
+                                            <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
+                                        </div>
+                                    </>
                             }
                         </div>
                     </div>
@@ -285,67 +318,67 @@ function UserDash(props) {
 
     return (
         <>
-                <div id="switchButton" className="row mb-2">
-                    <div className="col-4 offset-4 col-12">
-                        {props.goal.length > 0 && view === 0 ?
-                            <Toggle switchMeasure={switchMeasure} />
-                            :
-                            null
-                        }
-                    </div>
+            <div id="switchButton" className="row mb-2">
+                <div className="col-4 offset-4 col-12">
+                    {props.goal.length > 0 && view === 0 ?
+                        <Toggle switchMeasure={switchMeasure} />
+                        :
+                        null
+                    }
                 </div>
-                <div class="row">
-                    <div className="col-md-4 mt-4">
-                        {props.user ?
-                            <h5>{user.name}'s <br />bookshelves</h5>
-                            :
-                            <h5>Bookshelves</h5>
-                        }
-                        <br />
-                        {props.user ? dashOptions() : null}
-                    </div>
-                    <div id="goalScroll" className="col-md-8 col-12 mt-4">
-                        {view !== 0
-                            /* && renderList.length > 0  */
-                            ?
-                            renderList.map((book, index) => {
-                                return (
-                                    <div id="booktable" className="row py-3">
-                                        <div className="col-sm-5">
-                                            <i>{book.title}</i>, {book.author}
-                                        </div>
-                                        <div className="col-md-2 col-12">
-                                            <UpdateButton
-                                                user={props.user}
-                                                view={view}
-                                                book={book.book_id}
-                                                storeTags={props.storeTags}
-                                                showView={showView}
-                                                id={book.tag_id}
-                                                tags={tags}
-
-                                            />
-                                        </div>
-                                        <div className="col-md-2 col-12">
-                                            <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm">Set Goal</button>
-                                        </div>
-                                        <div className="col-md-2 col-12">
-                                            <button id={index} onClick={() => deleteBook(book.book_id, user.id, book.tag_id)} className="btn btn-danger btn-sm">Remove</button>
-                                        </div>
+            </div>
+            <div class="row">
+                <div className="col-md-4 mt-4">
+                    {props.user ?
+                        <h5>{user.name}'s <br />bookshelves</h5>
+                        :
+                        <h5>Bookshelves</h5>
+                    }
+                    <br />
+                    {props.user ? dashOptions() : null}
+                </div>
+                <div id="goalScroll" className="col-md-8 col-12 mt-4">
+                    {view !== 0
+                        /* && renderList.length > 0  */
+                        ?
+                        renderList.map((book, index) => {
+                            return (
+                                <div id="booktable" className="row py-3">
+                                    <div className="col-sm-5">
+                                        <i>{book.title}</i>, {book.author}
                                     </div>
+                                    <div className="col-md-2 col-12">
+                                        <UpdateButton
+                                            user={props.user}
+                                            view={view}
+                                            book={book.book_id}
+                                            storeTags={props.storeTags}
+                                            showView={showView}
+                                            id={book.tag_id}
+                                            tags={tags}
 
-                                )
-                            })
-
-                            :
-                            <>
-                                <div className="row d-flex flex-row flex-nowrap">
-                                    {goalView}
+                                        />
+                                    </div>
+                                    <div className="col-md-2 col-12">
+                                        <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm">Set Goal</button>
+                                    </div>
+                                    <div className="col-md-2 col-12">
+                                        <button id={index} onClick={() => deleteBook(book.book_id, user.id, book.tag_id)} className="btn btn-danger btn-sm">Remove</button>
+                                    </div>
                                 </div>
-                            </>
-                        }
-                    </div>
+
+                            )
+                        })
+
+                        :
+                        <>
+                            <div className="row d-flex flex-row flex-nowrap">
+                                {goalView}
+                            </div>
+                        </>
+                    }
                 </div>
+            </div>
         </>
 
 

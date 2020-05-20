@@ -34,7 +34,7 @@ function SearchBar(props) {
     return (
 
         <div className="row">
-            <div className="col-md-4 offset-4 mb-4">
+            <div className="col-md-4 offset-4 col-sm-12 offset-0 mb-4">
                 <form onSubmit={handleSubmit} className="form-inline my-2 my-lg-0 mt-3">
                     <input className="form-control mr-sm-2" type="search" onChange={handleChange} placeholder="Find your next book" aria-label="Search" />
                     <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>

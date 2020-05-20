@@ -12,11 +12,11 @@
   background-color: rgb(248, 246, 246);
 }
 
-.card {
+#goalCard {
   max-height: 400px;
   min-height: 400px;
 }
 
 h5 {
   min-height: 48px;
-}
+} 
