@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import apiKey from './apiKey'
 import SearchBar from './SearchBar'
 import { useHistory } from "react-router-dom"
+import './BookSearch.css'
 
 function BookSearch(props) {
 
@@ -46,7 +47,7 @@ function BookSearch(props) {
 
     return (
         <div className="row">
-            <div className="col-md-8 offset-2 mt-5">
+            <div id="search" className="col-md-8 offset-2 mt-2">
                 {book}
             </div>
         </div>

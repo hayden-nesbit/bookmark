@@ -6,7 +6,7 @@ const Toggle = (props) => {
         <Form>
         <FormGroup>
             <div>
-                <CustomInput onChange={props.switchMeasure} type="switch" id="exampleCustomSwitch" name="customSwitch" label="Pages or minutes per day" />
+                <CustomInput onChange={props.switchMeasure} type="switch" id="exampleCustomSwitch" name="customSwitch" label="" />
             </div>
         </FormGroup>
         </Form>

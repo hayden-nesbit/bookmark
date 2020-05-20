@@ -29,7 +29,6 @@ const ShelfButton = (props) => {
       console.log(data)
     axios.post('http://127.0.0.1:8000/api/tagBook', data)
       .then(function (response) {
-        //if message add
         props.setBookList(response.data)
         props.storeTags(response.data)
         history.push("/dash")
