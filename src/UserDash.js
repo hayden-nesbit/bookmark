@@ -78,11 +78,11 @@ function UserDash(props) {
             });
     }
 
-    async function updatePage(id, newPage, index) {
+    async function updatePage(id, newPageCount, index, resetPage) {
 
         const data = {
             id: id,
-            pageCount: newPage,
+            pagesLeft: newPageCount ? newPageCount : resetPage,
             user_id: user.id
         }
         await axios.post('http://127.0.0.1:8000/api/updatePage', data)
@@ -122,17 +122,19 @@ function UserDash(props) {
             :
             setCheckId(newCheck)
 
-        let perDiem = (Math.ceil((props.goal[index].pageCount) / days))
-        let newPage = (props.goal[index].pageCount) - perDiem
-        console.log(newPage)
+        let perDiem = (Math.ceil((props.goal[index].pagesLeft) / days))
+        let newPageCount = (props.goal[index].pagesLeft) - perDiem
+        console.log(newPageCount)
 
-        updatePage(id, newPage, index)
+        updatePage(id, newPageCount, index)
 
     }
 
-    function clearGoal(id) {
+    async function clearGoal(id, resetPage) {
+        await updatePage(id, resetPage)
         let update = props.goal.filter(goal => goal.id !== id)
         props.storeGoal(update)
+
     }
 
 
@@ -179,13 +181,14 @@ function UserDash(props) {
 
     let goalView = props.goal.length > 0 ? props.goal.map((item, index) => {
         let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
-        // let end = item.end_date !== startDate ? new Date(item.end_date) : startDate
+        // let end = item.end_date !== startDate ? new Date(item.end_date) : endDate
 
+        console.log(item.end_date)
 
         return (
             <div id={index} className="col">
                 <div id="goalCard" className="card bg-light mb-5" style={{ width: '18rem' }}>
-                    <div className="card-body">
+                    <div id="goalHeight" className="card-body">
                         <div>
                             <h5 className="card-title text-center">
                                 {item.title}
@@ -194,50 +197,58 @@ function UserDash(props) {
                                 <>
                                     <div className="text-primary text-center">
                                         <FontAwesomeIcon icon={faThumbsUp} size="5x" />
-                                        <h4 className="text-center mt-5 mb-5">{item.phrase ? item.phrase : null}</h4>
-                                        {/* <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button> */}
-                                    </div>
-                                </>
-                                    :
-                                    <>
-                                        {measure === false ?
+                                        {item.pagesLeft < 0 ?
                                             <>
-                                                <h1 className="card-title text-center display-1 text-primary">
-                                                    {Math.ceil(item.pageCount / days)}
-                                                </h1>
-                                                <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
+                                                <h4 className="text-center mt-5 mb-5">Congrats! You're finished!"</h4>
+                                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-success btn-sm text-center mt-3">Done</button>
                                             </>
                                             :
-                                            <>
-                                                <h1 className="card-title text-center display-1 text-primary">{Math.ceil((item.pageCount / days) * 1.5)} </h1>
-                                                <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
-                                            </>
-                                        }
-                                        <div className="form-check pb-5 text-center">
-                                            <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
-                                        </div>
 
-                                        <div>
-                                            <DatePicker
-                                                onChange={date => setStart(date)}
-                                                placeholderText="Select a start date"
-                                                selected={startDate}
-                                                selectsStart
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                            />
-                                            <DatePicker
-                                                onChange={date => setEnd(date, item.book_id, index)}
-                                                placeholderText="Select an end date"
-                                                selected={endDate}
-                                                selectsEnd
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                                minDate={startDate}
-                                            />
-                                            <button onClick={() => clearGoal(item.id)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
-                                        </div>
-                                    </>
+                                            <h4 className="text-center mt-5 mb-5">{item.phrase}</h4>
+
+                                        }
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    {measure === false ?
+                                        <>
+                                            <h1 className="card-title text-center display-1 text-primary">
+                                                {Math.ceil(item.pagesLeft / days)}
+                                            </h1>
+                                            <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
+                                        </>
+                                        :
+                                        <>
+                                            <h1 className="card-title text-center display-1 text-primary">{Math.ceil((item.pagesLeft / days) * 1.5)} </h1>
+                                            <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
+                                        </>
+                                    }
+                                    <div className="form-check pb-5 text-center">
+                                        <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
+                                    </div>
+
+                                    <div className="text-center">
+                                        <DatePicker
+                                            onChange={date => setStart(date)}
+                                            placeholderText="Select a start date"
+                                            selected={startDate}
+                                            selectsStart
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                        />
+                                        <DatePicker
+                                            onChange={date => setEnd(date, item.book_id, index)}
+                                            placeholderText="Select an end date"
+                                            selected={endDate}
+                                            selectsEnd
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            minDate={startDate}
+                                        />
+                                        <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
+                                    </div>
+                                </>
                             }
                         </div>
                     </div>

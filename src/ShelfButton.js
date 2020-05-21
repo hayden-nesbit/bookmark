@@ -21,7 +21,6 @@ const ShelfButton = (props) => {
         bookImage: book.imageLinks.smallThumbnail,
         bookPage: book.pageCount,
         bookAuthor: book.authors[0],
-        // bookCat: book.categories[0],
         bookPubDate: book.publishedDate,
         bookPub: book.publisher,
         bookDescription: book.description
