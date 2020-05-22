@@ -79,8 +79,6 @@ function UserDash(props) {
                 let remove = [];
                 remove = props.goal.filter(goal => goal.id !== id)
                 remove.splice(index, 0, response.data.tags.find(({ book_id }) => book_id === id))
-                // props.storeGoal(remove)
-                console.log(remove)
 
                 let first = user.name.split(" ")
                 first = first[0]
@@ -91,7 +89,7 @@ function UserDash(props) {
                 for (let goal of tempGoal) {
                     if (goal.id === id) {
                         goal.phrase = note
-                    } 
+                    }
                 }
                 props.storeGoal(tempGoal)
 
@@ -123,14 +121,11 @@ function UserDash(props) {
 
         let perDiem = (Math.ceil((props.goal[index].pagesLeft) / days))
         let newPageCount = (props.goal[index].pagesLeft) - perDiem
-        console.log(newPageCount)
 
         updatePage(id, newPageCount, index)
 
     }
 
-
-    console.log(props.goal)
     function setGoal(id, arr) {
         let newGoal = [];
         newGoal.push(arr.find(({ book_id }) => book_id === id))
@@ -176,33 +171,56 @@ function UserDash(props) {
         let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
         let end = item.end_date !== null ? new Date(item.end_date) : startDate
 
-        console.log(new Date())
-
         return (
-            <div id={index} className="col">
-                <div id="goalCard" className="card bg-light mb-5" style={{ width: '18rem' }}>
-                    <div id="goalHeight" className="card-body">
-                        <div>
-                            <h5 className="card-title text-center">
-                                {item.title}
-                            </h5>
+            <div id={index} className="col mt-4">
+                <div id="goalCard" className="mb-5" style={{ width: '18rem' }}>
+                    {/* <div id="goalHeight" className=""> */}
+                    <div className="row">
+                        <div className="col-4">
+                            {item.image ?
+                                <img src={item.image} className="float-left mb-3" />
+                                :
+                                <h5 className="text-center float-right">
+                                    {item.title}
+                                </h5>
+                            }
+
+                            <div className="text-center">
+                                <DatePicker
+                                    onChange={date => setStart(date)}
+                                    placeholderText="Select a start date"
+                                    selected={startDate}
+                                    selectsStart
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                />
+                                <DatePicker
+                                    onChange={date => setEnd(date, item.book_id, index)}
+                                    placeholderText="Select an end date"
+                                    selected={end}
+                                    selectsEnd
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    minDate={startDate}
+                                />
+                            </div>
+                            {item.pagesLeft < 0 ?
+                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-success btn-sm text-center mt-3">Done</button>
+                                :
+                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-danger btn-sm float-left mt-3">Clear goal</button>
+                            }
+                        </div>
+                        <div className="col-8">
                             {check === true && checkId.includes(item.id) ?
                                 <>
                                     <div className="text-primary text-center mt-5">
-                                        <FontAwesomeIcon icon={faThumbsUp} size="5x" />
+                                        <FontAwesomeIcon icon={faThumbsUp} size="3x" />
                                         {item.pagesLeft < 0 ?
                                             <>
-                                                <h4 className="text-center mt-5 mb-5">Congrats! You're finished!</h4>
-                                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-success btn-sm text-center mb-5">Done</button>
+                                                <h4 className="text-center mt-3 mb-5">Congrats! You're finished!</h4>
                                             </>
                                             :
-                                            <>
-                                                <h4 className="text-center mt-5 mb-5">{item.phrase}</h4>
-                                                {/* <div className="progress">
-                                                    <div className="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                                                </div> */}
-                                            </>
-
+                                            <h4 className="text-center mt-3 mb-5 px-4">{item.phrase}</h4>
                                         }
                                     </div>
                                 </>
@@ -210,14 +228,14 @@ function UserDash(props) {
                                 <>
                                     {measure === false ?
                                         <>
-                                            <h1 className="card-title text-center display-1 text-primary">
+                                            <h1 className="card-title text-center display-3 text-primary">
                                                 {Math.ceil(item.pagesLeft / days)}
                                             </h1>
                                             <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
                                         </>
                                         :
                                         <>
-                                            <h1 className="card-title text-center display-1 text-primary">{Math.ceil((item.pagesLeft / days) * 1.5)} </h1>
+                                            <h1 className="card-title text-center display-3 text-primary">{Math.ceil((item.pagesLeft / days) * 1.5)} </h1>
                                             <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
                                         </>
                                     }
@@ -225,26 +243,7 @@ function UserDash(props) {
                                         <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
                                     </div>
 
-                                    <div className="text-center">
-                                        <DatePicker
-                                            onChange={date => setStart(date)}
-                                            placeholderText="Select a start date"
-                                            selected={startDate}
-                                            selectsStart
-                                            startDate={startDate}
-                                            endDate={endDate}
-                                        />
-                                        <DatePicker
-                                            onChange={date => setEnd(date, item.book_id, index)}
-                                            placeholderText="Select an end date"
-                                            selected={end}
-                                            selectsEnd
-                                            startDate={startDate}
-                                            endDate={endDate}
-                                            minDate={startDate}
-                                        />
-                                        <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-danger btn-sm text-center mt-3">Clear goal</button>
-                                    </div>
+
                                 </>
                             }
                         </div>
@@ -335,9 +334,6 @@ function UserDash(props) {
 
     return (
         <>
-            {/* <div id="switchButton" className="row mb-2">
-                
-            </div> */}
             <div class="row">
                 <div className="col-md-4 col-12 mt-4">
                     {props.user ?
@@ -396,13 +392,8 @@ function UserDash(props) {
     )
 
 
-
-
 }
 
 
 
-
-
 export default UserDash;
-

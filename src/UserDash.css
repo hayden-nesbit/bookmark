@@ -1,7 +1,7 @@
 #goalScroll {
     max-height: 400px;
     overflow-x:scroll;
-    overflow-y:visible;
+    overflow-y:auto;
 }
 
 #switchButton {
@@ -15,6 +15,7 @@
 #goalCard {
   max-height: 400px;
   min-height: 400px;
+  min-width: 350px;
 }
 
 /* #goalHeight {
@@ -24,3 +25,12 @@
 h5 {
   min-height: 48px;
 } 
+
+#cover {
+  min-height: 200px;
+}
+
+img {
+  min-height: 210px;
+  max-height: 210px;
+}
