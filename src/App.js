@@ -95,10 +95,6 @@ function App() {
             currentBook={currentBook}
             storeCurrent={storeCurrent}
             storeBooks={storeBooks}
-            // setStart={setStart}
-            // setEnd={setEnd}
-            // startDate={startDate}
-            // endDate={endDate}
             bookList={bookList}
             setBookList={setBookList}
             books={books}
@@ -126,10 +122,6 @@ function Home(props) {
               user={props.user}
               currentBook={props.currentBook}
               storeCurrent={props.storeCurrent}
-              // setStart={props.setStart}
-              // setEnd={props.setEnd}
-              // startDate={props.startDate}
-              // endDate={props.endDate}
               bookList={props.bookList}
               setBookList={props.setBookList}
               books={props.books}

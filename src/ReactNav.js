@@ -52,6 +52,10 @@ const ReactNav = (props) => {
 }
 
 const Login = (props) => {
+  const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
+  // const API_KEY = "http://127.0.0.1:8000/api/"
+
+
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const history = useHistory();
@@ -63,7 +67,7 @@ const Login = (props) => {
       email: email,
       password: password
     };
-    axios.post('http://127.0.0.1:8000/api/login', data)
+    axios.post(API_KEY + 'login', data)
       .then(response => {
         props.setUserData(response.data)
         history.push("/dash")
@@ -78,7 +82,7 @@ const Login = (props) => {
     const data = {
       headers: { Authorization: "Bearer " + props.user.token }
     }
-    axios.get('http://127.0.0.1:8000/api/logout', data)
+    axios.get(API_KEY + 'logout', data)
       .then(response => {
         localStorage.clear();
         history.push("/")

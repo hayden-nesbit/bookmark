@@ -13,6 +13,10 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 
 function UserDash(props) {
 
+    const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
+    // const API_KEY = "http://127.0.0.1:8000/api/"
+
+
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
 
@@ -41,42 +45,27 @@ function UserDash(props) {
 
 
 
-    // async function axiosTags(id, user, view) {
-    //     const data = {
-    //             headers: { Authorization: "Bearer " + props.user.token },
-    //             book_id: id,
-    //             user_id: user
-    //         }
-    //         await axios.post('http://127.0.0.1:8000/api/deleteBook', data)
-    //             .then(function (response) {
-    //                 props.storeTags(response.data)
-    //                 tags = response.data.tags
-    //                 showView(view)
-
-    //             })
-    //             .catch(function (error) {
-    //                 console.log(error);
-    //             });
-    // }
-
-
     async function deleteBook(id, user, view) {
         const data = {
             headers: { Authorization: "Bearer " + props.user.token },
             book_id: id,
             user_id: user
         }
-        await axios.post('http://127.0.0.1:8000/api/deleteBook', data)
+        await axios.post(API_KEY + 'deleteBook', data)
             .then(function (response) {
                 props.storeTags(response.data)
                 tags = response.data.tags
                 showView(view)
+
+                let resetGoal = props.goal.filter(goal => goal.id !== id)
+                props.storeGoal(resetGoal)
 
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
+
 
     async function updatePage(id, newPageCount, index, resetPage) {
 
@@ -85,7 +74,7 @@ function UserDash(props) {
             pagesLeft: newPageCount ? newPageCount : resetPage,
             user_id: user.id
         }
-        await axios.post('http://127.0.0.1:8000/api/updatePage', data)
+        await axios.post(API_KEY + 'updatePage', data)
             .then(function (response) {
                 let remove = [];
                 remove = props.goal.filter(goal => goal.id !== id)
@@ -93,13 +82,16 @@ function UserDash(props) {
                 // props.storeGoal(remove)
                 console.log(remove)
 
-                let notes = ["Great job!", "Good work today!", "Awesome! See you tomorrow!", "One day closer!", "You're on a roll!", "Nice!"]
+                let first = user.name.split(" ")
+                first = first[0]
+
+                let notes = ["Great job, " + first + "!", "Good work today!", "Awesome! See you tomorrow " + first + "!", "One day closer!", "You're on a roll, " + first + "!", "Nice!"]
                 let note = notes[Math.floor(Math.random() * notes.length)];
                 let tempGoal = [...remove]
                 for (let goal of tempGoal) {
                     if (goal.id === id) {
                         goal.phrase = note
-                    }
+                    } 
                 }
                 props.storeGoal(tempGoal)
 
@@ -107,6 +99,13 @@ function UserDash(props) {
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    async function clearGoal(id, resetPage) {
+        let update = props.goal.filter(goal => goal.id !== id)
+        await updatePage(id, resetPage)
+        props.storeGoal(update)
+
     }
 
 
@@ -130,14 +129,8 @@ function UserDash(props) {
 
     }
 
-    async function clearGoal(id, resetPage) {
-        await updatePage(id, resetPage)
-        let update = props.goal.filter(goal => goal.id !== id)
-        props.storeGoal(update)
 
-    }
-
-
+    console.log(props.goal)
     function setGoal(id, arr) {
         let newGoal = [];
         newGoal.push(arr.find(({ book_id }) => book_id === id))
@@ -157,7 +150,7 @@ function UserDash(props) {
             user_id: user.id,
             end_date: endDate,
         }
-        axios.post('http://127.0.0.1:8000/api/setGoal', data)
+        axios.post(API_KEY + 'setGoal', data)
             .then(function (response) {
                 let remove = [];
                 remove = props.goal.filter(goal => goal.id !== id)
@@ -181,9 +174,9 @@ function UserDash(props) {
 
     let goalView = props.goal.length > 0 ? props.goal.map((item, index) => {
         let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
-        // let end = item.end_date !== startDate ? new Date(item.end_date) : endDate
+        let end = item.end_date !== null ? new Date(item.end_date) : startDate
 
-        console.log(item.end_date)
+        console.log(new Date())
 
         return (
             <div id={index} className="col">
@@ -195,16 +188,20 @@ function UserDash(props) {
                             </h5>
                             {check === true && checkId.includes(item.id) ?
                                 <>
-                                    <div className="text-primary text-center">
+                                    <div className="text-primary text-center mt-5">
                                         <FontAwesomeIcon icon={faThumbsUp} size="5x" />
                                         {item.pagesLeft < 0 ?
                                             <>
-                                                <h4 className="text-center mt-5 mb-5">Congrats! You're finished!"</h4>
-                                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-success btn-sm text-center mt-3">Done</button>
+                                                <h4 className="text-center mt-5 mb-5">Congrats! You're finished!</h4>
+                                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-success btn-sm text-center mb-5">Done</button>
                                             </>
                                             :
-
-                                            <h4 className="text-center mt-5 mb-5">{item.phrase}</h4>
+                                            <>
+                                                <h4 className="text-center mt-5 mb-5">{item.phrase}</h4>
+                                                {/* <div className="progress">
+                                                    <div className="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                                                </div> */}
+                                            </>
 
                                         }
                                     </div>
@@ -224,7 +221,7 @@ function UserDash(props) {
                                             <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
                                         </>
                                     }
-                                    <div className="form-check pb-5 text-center">
+                                    <div className="form-check mb-5 text-center">
                                         <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
                                     </div>
 
@@ -240,7 +237,7 @@ function UserDash(props) {
                                         <DatePicker
                                             onChange={date => setEnd(date, item.book_id, index)}
                                             placeholderText="Select an end date"
-                                            selected={endDate}
+                                            selected={end}
                                             selectsEnd
                                             startDate={startDate}
                                             endDate={endDate}
@@ -257,7 +254,9 @@ function UserDash(props) {
         )
     })
         :
-        <h4>You have no current goals!</h4>
+        <div className="col">
+            <h4 className="text-left">You have no current goals!</h4>
+        </div>
 
 
     const [renderList, setRenderList] = useState([]);
@@ -282,7 +281,7 @@ function UserDash(props) {
                 prev_tag: view,
                 user_id: user.id
             }
-            await axios.post('http://127.0.0.1:8000/api/updateBook', data)
+            await axios.post(API_KEY + 'updateBook', data)
                 .then(function (response) {
                     props.storeTags(response.data)
                     tags = response.data.tags
@@ -316,7 +315,14 @@ function UserDash(props) {
                 <li className="mb-3"><a className={view === 2 ? "text-muted" : null} href="#" onClick={() => showView(2)}>currently-reading ({tags.filter(tag => tag.tag_id === 2).length})</a></li>
                 <li className="mb-3"><a className={view === 3 ? "text-muted" : null} href="#" onClick={() => showView(3)}>read ({tags.filter(tag => tag.tag_id === 3).length})</a></li>
                 {view === 0 ?
-                    null
+                    <li>
+                        <br />
+                        {props.goal.length > 0 && view === 0 ?
+                            <Toggle switchMeasure={switchMeasure} />
+                            :
+                            null
+                        }
+                    </li>
                     :
                     <div>
                         <br />
@@ -329,17 +335,11 @@ function UserDash(props) {
 
     return (
         <>
-            <div id="switchButton" className="row mb-2">
-                <div className="col-4 offset-4 col-12">
-                    {props.goal.length > 0 && view === 0 ?
-                        <Toggle switchMeasure={switchMeasure} />
-                        :
-                        null
-                    }
-                </div>
-            </div>
+            {/* <div id="switchButton" className="row mb-2">
+                
+            </div> */}
             <div class="row">
-                <div className="col-md-4 mt-4">
+                <div className="col-md-4 col-12 mt-4">
                     {props.user ?
                         <h5>{user.name}'s <br />bookshelves</h5>
                         :
@@ -358,7 +358,7 @@ function UserDash(props) {
                                     <div className="col-sm-5">
                                         <i>{book.title}</i>, {book.author}
                                     </div>
-                                    <div className="col-md-2 col-12">
+                                    <div className="col-md-2 col-2">
                                         <UpdateButton
                                             user={props.user}
                                             view={view}
@@ -370,10 +370,10 @@ function UserDash(props) {
 
                                         />
                                     </div>
-                                    <div className="col-md-2 col-12">
+                                    <div className="col-md-2 col-2">
                                         <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm">Set Goal</button>
                                     </div>
-                                    <div className="col-md-2 col-12">
+                                    <div className="col-md-2 col-2">
                                         <button id={index} onClick={() => deleteBook(book.book_id, user.id, book.tag_id)} className="btn btn-danger btn-sm">Remove</button>
                                     </div>
                                 </div>
