@@ -9,8 +9,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 
 
 function Landing(props) {
-    const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
-    // const API_KEY = "http://127.0.0.1:8000/api/"
+    // const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
+    const API_KEY = "http://127.0.0.1:8000/api/"
 
 
     const [name, setName] = useState("");

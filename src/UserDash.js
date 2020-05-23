@@ -8,13 +8,15 @@ import axios from 'axios';
 import './UserDash.css'
 import Toggle from './Toggle.js';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Collapse, Button, CardBody, Card } from 'reactstrap';
+
 
 
 
 function UserDash(props) {
 
-    const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
-    // const API_KEY = "http://127.0.0.1:8000/api/"
+    // const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
+    const API_KEY = "http://127.0.0.1:8000/api/"
 
 
     const [startDate, setStartDate] = useState(new Date());
@@ -107,9 +109,11 @@ function UserDash(props) {
     }
 
 
-    function handleClick(view, check, id, index, days) {
+    function handleClick(view, check, id, index, days, input) {
         setView(view)
         setCheck(check)
+
+        console.log(input)
 
         let newCheck = [];
         newCheck.push(id)
@@ -165,14 +169,53 @@ function UserDash(props) {
             setMeasure(true)
     }
 
+    const DateDrop = (props) => {
+        const [isOpen, setIsOpen] = useState(false);
 
+        const toggle = () => setIsOpen(!isOpen);
+
+        return (
+            <div>
+                {props.item.pagesLeft < 0 ?
+                    <button onClick={() => clearGoal(props.item.id, props.item.pageCount)} className="btn btn-outline-success btn-sm text-center">Done</button>
+                    :
+                    <>
+                        <Button color="outline-success" size="sm" onClick={toggle} style={{ marginBottom: '1rem' }}>Set goal</Button>
+                        <Collapse isOpen={isOpen}>
+                            <DatePicker
+                                onChange={date => setStart(date)}
+                                placeholderText="Select a start date"
+                                selected={startDate}
+                                selectsStart
+                                startDate={startDate}
+                                endDate={endDate}
+                            />
+                            <DatePicker
+                                onChange={date => setEnd(date, props.item.book_id, props.index)}
+                                placeholderText="Select an end date"
+                                selected={props.end}
+                                selectsEnd
+                                startDate={startDate}
+                                endDate={endDate}
+                                minDate={startDate}
+                            />
+
+                            <button onClick={() => clearGoal(props.item.id, props.item.pageCount)} className="btn btn-outline-danger btn-sm float-left mt-3">Clear goal</button>
+                        </Collapse>
+                    </>
+                }
+            </div>
+        );
+    }
+
+    
 
     let goalView = props.goal.length > 0 ? props.goal.map((item, index) => {
         let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
         let end = item.end_date !== null ? new Date(item.end_date) : startDate
 
         return (
-            <div id={index} className="col mt-4">
+            <div id={index} className="col">
                 <div id="goalCard" className="mb-5" style={{ width: '18rem' }}>
                     {/* <div id="goalHeight" className=""> */}
                     <div className="row">
@@ -185,32 +228,17 @@ function UserDash(props) {
                                 </h5>
                             }
 
-                            <div className="text-center">
-                                <DatePicker
-                                    onChange={date => setStart(date)}
-                                    placeholderText="Select a start date"
-                                    selected={startDate}
-                                    selectsStart
-                                    startDate={startDate}
-                                    endDate={endDate}
-                                />
-                                <DatePicker
-                                    onChange={date => setEnd(date, item.book_id, index)}
-                                    placeholderText="Select an end date"
-                                    selected={end}
-                                    selectsEnd
-                                    startDate={startDate}
-                                    endDate={endDate}
-                                    minDate={startDate}
-                                />
-                            </div>
-                            {item.pagesLeft < 0 ?
-                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-success btn-sm text-center mt-3">Done</button>
-                                :
-                                <button onClick={() => clearGoal(item.id, item.pageCount)} className="btn btn-outline-danger btn-sm float-left mt-3">Clear goal</button>
-                            }
+                            <DateDrop
+                                item={item}
+                                index={index}
+                                end={end}
+                            />
+
+
+
+
                         </div>
-                        <div className="col-8">
+                        <div className="col-8 pt-2">
                             {check === true && checkId.includes(item.id) ?
                                 <>
                                     <div className="text-primary text-center mt-5">
@@ -226,6 +254,7 @@ function UserDash(props) {
                                 </>
                                 :
                                 <>
+                                   
                                     {measure === false ?
                                         <>
                                             <h1 className="card-title text-center display-3 text-primary">
@@ -239,6 +268,7 @@ function UserDash(props) {
                                             <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
                                         </>
                                     }
+
                                     <div className="form-check mb-5 text-center">
                                         <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
                                     </div>
@@ -367,7 +397,7 @@ function UserDash(props) {
                                         />
                                     </div>
                                     <div className="col-md-2 col-2">
-                                        <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm">Set Goal</button>
+                                        <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm">Add Goal</button>
                                     </div>
                                     <div className="col-md-2 col-2">
                                         <button id={index} onClick={() => deleteBook(book.book_id, user.id, book.tag_id)} className="btn btn-danger btn-sm">Remove</button>
