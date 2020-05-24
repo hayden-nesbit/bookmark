@@ -1,7 +1,7 @@
 #goalScroll {
     max-height: 400px;
     overflow-x:scroll;
-    overflow-y:auto;
+    overflow-y:hidden;
 }
 
 #switchButton {

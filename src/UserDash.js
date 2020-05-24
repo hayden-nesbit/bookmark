@@ -12,12 +12,19 @@ import { Collapse, Button, CardBody, Card } from 'reactstrap';
 
 
 
-
 function UserDash(props) {
 
     // const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
     const API_KEY = "http://127.0.0.1:8000/api/"
 
+console.log(props.goal)
+    const [input, setInput] = useState();
+
+    // function sendInput(input, id, index) {
+
+    //     setInput(input)
+
+    // }
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -101,19 +108,37 @@ function UserDash(props) {
             });
     }
 
-    async function clearGoal(id, resetPage) {
+    async function clearGoal(id, resetPage, tag) {
         let update = props.goal.filter(goal => goal.id !== id)
-        await updatePage(id, resetPage)
+        updatePage(id, resetPage)
+
+        const data = {
+            book_id: id,
+            tag_id: tag,
+            user_id: user.id
+        }
+        await axios.post(API_KEY + 'clearGoal', data)
+            .then(function (response) {
+
+                console.log(response.data)
+
+                // props.storeGoal(response.data)
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
         props.storeGoal(update)
 
     }
 
+    console.log(input)
 
-    function handleClick(view, check, id, index, days, input) {
+    function handleClick(view, check, id, index) {
         setView(view)
         setCheck(check)
 
-        console.log(input)
 
         let newCheck = [];
         newCheck.push(id)
@@ -123,10 +148,13 @@ function UserDash(props) {
             :
             setCheckId(newCheck)
 
-        let perDiem = (Math.ceil((props.goal[index].pagesLeft) / days))
-        let newPageCount = (props.goal[index].pagesLeft) - perDiem
+        // let perDiem = (Math.ceil((props.goal[index].pagesLeft) / days))
+        let newPageCount = (props.goal[index].pagesLeft) - input
+
+        console.log(input)
 
         updatePage(id, newPageCount, index)
+        setInput("")
 
     }
 
@@ -174,13 +202,18 @@ function UserDash(props) {
 
         const toggle = () => setIsOpen(!isOpen);
 
+        console.log(props.item)
         return (
             <div>
                 {props.item.pagesLeft < 0 ?
-                    <button onClick={() => clearGoal(props.item.id, props.item.pageCount)} className="btn btn-outline-success btn-sm text-center">Done</button>
+                    <button onClick={() => clearGoal(props.item.id, props.item.pageCount, props.item.tag_id)} className="btn btn-outline-success btn-sm text-center">Done</button>
                     :
                     <>
-                        <Button color="outline-success" size="sm" onClick={toggle} style={{ marginBottom: '1rem' }}>Set goal</Button>
+                        {props.item.end_date === null ?
+                            <Button color="outline-success" size="sm" onClick={toggle} style={{ marginBottom: '1rem' }}>Set goal</Button>
+                            :
+                            <Button color="outline-success" size="sm" onClick={toggle} style={{ marginBottom: '1rem' }}>Update goal</Button>
+                        }
                         <Collapse isOpen={isOpen}>
                             <DatePicker
                                 onChange={date => setStart(date)}
@@ -200,7 +233,7 @@ function UserDash(props) {
                                 minDate={startDate}
                             />
 
-                            <button onClick={() => clearGoal(props.item.id, props.item.pageCount)} className="btn btn-outline-danger btn-sm float-left mt-3">Clear goal</button>
+                            <button onClick={() => clearGoal(props.item.id, props.item.pageCount, props.item.tag_id)} className="btn btn-outline-danger btn-sm float-left mt-3">Clear goal</button>
                         </Collapse>
                     </>
                 }
@@ -208,7 +241,7 @@ function UserDash(props) {
         );
     }
 
-    
+
 
     let goalView = props.goal.length > 0 ? props.goal.map((item, index) => {
         let days = (new Date(item.end_date).getTime() - startDate.getTime()) / (1000 * 3600 * 24)
@@ -234,48 +267,59 @@ function UserDash(props) {
                                 end={end}
                             />
 
-
-
-
                         </div>
                         <div className="col-8 pt-2">
-                            {check === true && checkId.includes(item.id) ?
-                                <>
-                                    <div className="text-primary text-center mt-5">
-                                        <FontAwesomeIcon icon={faThumbsUp} size="3x" />
-                                        {item.pagesLeft < 0 ?
-                                            <>
-                                                <h4 className="text-center mt-3 mb-5">Congrats! You're finished!</h4>
-                                            </>
-                                            :
-                                            <h4 className="text-center mt-3 mb-5 px-4">{item.phrase}</h4>
-                                        }
-                                    </div>
-                                </>
-                                :
-                                <>
-                                   
-                                    {measure === false ?
+                            <div className="row">
+                                <div className="col">
+                                    {check === true && checkId.includes(item.id) ?
                                         <>
-                                            <h1 className="card-title text-center display-3 text-primary">
-                                                {Math.ceil(item.pagesLeft / days)}
-                                            </h1>
-                                            <h6 className="card-subtitle mb-2 text-muted text-center">pages/day</h6>
+                                            <div className="text-primary text-center mt-3">
+                                                <FontAwesomeIcon icon={faThumbsUp} size="3x" />
+                                                {item.pagesLeft < 0 ?
+                                                    <>
+                                                        <h4 className="text-center mt-3 mb-5">Congrats! You're finished!</h4>
+                                                    </>
+                                                    :
+                                                    <h4 className="text-center mt-3 mb-5 px-4">{item.phrase}</h4>
+                                                }
+                                            </div>
                                         </>
                                         :
                                         <>
-                                            <h1 className="card-title text-center display-3 text-primary">{Math.ceil((item.pagesLeft / days) * 1.5)} </h1>
-                                            <h6 className="card-subtitle mb-2 text-muted text-center">minutes/day</h6>
+
+                                            {measure === false ?
+                                                <>
+                                                    <h5 className="card-subtitle text-primary text-center">pages/day</h5>
+                                                    <h1 className="card-title text-center display-3 text-primary mt-0">
+                                                        {Math.ceil(item.pagesLeft / days)}
+                                                    </h1>
+                                                </>
+                                                :
+                                                <>
+                                                    <h5 className="card-subtitle text-primary text-center">minutes/day</h5>
+                                                    <h1 className="card-title text-center display-3 text-primary mt-0">{Math.ceil((item.pagesLeft / days) * 1.5)} </h1>
+                                                </>
+                                            }
+
+                                            {/* <div className="form-check mb-5 text-center">
+                                                <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
+                                            </div> */}
+                                            <div className="row mt-5">
+                                                <div className="col">
+                                                    <p className="text-center mt-1">I'm on page</p>
+                                                    <form onSubmit={() => handleClick(0, true, item.id, index)}>
+                                                        {/* <div className="form-control form-control-sm col-md-6 offset-3"> */}
+                                                        <input onChange={(e) => setInput(e.target.value, item.id, index)} value={input} type="text" className="form-control form-control-sm col-4 offset-4" id="inputsm" />
+                                                        {/* </div> */}
+                                                    </form>
+                                                </div>
+                                            </div>
+
+
                                         </>
                                     }
-
-                                    <div className="form-check mb-5 text-center">
-                                        <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
-                                    </div>
-
-
-                                </>
-                            }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -427,3 +471,16 @@ function UserDash(props) {
 
 
 export default UserDash;
+
+
+
+
+
+
+
+
+
+
+
+
+
