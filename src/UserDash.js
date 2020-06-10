@@ -17,8 +17,6 @@ function UserDash(props) {
     // const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
     const API_KEY = "http://127.0.0.1:8000/api/"
 
-    // const [input, setInput] = useState();
-
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -27,7 +25,6 @@ function UserDash(props) {
     const [checkId, setCheckId] = useState([]);
 
     const [measure, setMeasure] = useState(false);
-
 
     function setStart(props) {
         setStartDate(props)
@@ -55,7 +52,6 @@ function UserDash(props) {
 
     const user = props.user.user
     let tags = props.tags ? props.tags.tags : props.user.user.tags
-
 
 
     async function deleteBook(id, user, view) {
@@ -113,29 +109,27 @@ function UserDash(props) {
             });
     }
 
-    async function clearGoal(id, resetPage, tag) {
-        let update = props.goal.filter(goal => goal.id !== id)
-        updatePage(id, resetPage)
-
+   async function clearGoal(id, resetPage, tag) {
+       
         const data = {
             book_id: id,
             tag_id: tag,
-            user_id: user.id
+            user_id: user.id,
+            pagesLeft: resetPage
         }
         await axios.post(API_KEY + 'clearGoal', data)
             .then(function (response) {
 
                 console.log(response.data)
 
-                // props.storeGoal(response.data)
-
             })
             .catch(function (error) {
                 console.log(error);
             });
 
+        let update = props.goal.filter(goal => goal.id !== id)
         props.storeGoal(update)
-
+        
     }
 
     function handleClick(view, check, id, index) {
@@ -203,7 +197,6 @@ function UserDash(props) {
 
         const toggle = () => setIsOpen(!isOpen);
 
-        console.log(props.item)
         return (
             <div>
                 {props.item.pagesLeft < 0 ?
@@ -249,8 +242,8 @@ function UserDash(props) {
         let end = item.end_date !== null ? new Date(item.end_date) : startDate
 
         return (
-            <div id={index} className="col">
-                <div id="goalCard" className="mb-5" style={{ width: '18rem' }}>
+            <div key={index} className="col">
+                <div id="goalCard" className="mb-5 mt-4" style={{ width: '18rem' }}>
                     {/* <div id="goalHeight" className=""> */}
                     <div className="row">
                         <div className="col-4">
@@ -302,21 +295,18 @@ function UserDash(props) {
                                                 </>
                                             }
 
-                                            {/* <div className="form-check mb-5 text-center">
-                                                <input type="checkbox" onClick={() => handleClick(0, true, item.id, index, days)} className="form-check-input" id="exampleCheck1" />
-                                            </div> */}
+                                            {end !== startDate ?
                                             <div className="row mt-5">
                                                 <div className="col">
                                                     <p className="text-center mt-1">I'm on page</p>
                                                     <form onSubmit={() => handleClick(0, true, item.id, index)}>
-                                                        {/* <div className="form-control form-control-sm col-md-6 offset-3"> */}
                                                         <input onChange={(e) => setInput(e.target.value, item.id)} type="text" className="form-control form-control-sm col-4 offset-4" id="inputsm" />
-                                                        {/* </div> */}
                                                     </form>
                                                 </div>
                                             </div>
-
-
+                                            :
+                                            null
+                                            }
                                         </>
                                     }
                                 </div>
@@ -409,7 +399,7 @@ function UserDash(props) {
 
     return (
         <>
-            <div class="row">
+            <div className="row">
                 <div className="col-md-4 col-12 mt-4">
                     {props.user ?
                         <h5>{user.name}'s <br />bookshelves</h5>
