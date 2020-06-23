@@ -32,7 +32,7 @@ function Landing(props) {
             .then(response => {
                 props.setUserData({
                     user: response.data.user,
-                    token: response.data.token  
+                    token: response.data.token
                 })
                 history.push("/dash")
 
@@ -43,35 +43,46 @@ function Landing(props) {
     }
 
     return (
-        <div id="main" className="container p-5">
+        <div className="container">
             <div className="row mt-5">
-                <div className="col-md-4 text-center">
-                    <FontAwesomeIcon icon={faBookOpen} className="text-primary"  size="6x" /><br />
-                    <h3 className="mt-4 text-secondary">Find your Book</h3>
+                <div className="col-6 text-right">
+                    <FontAwesomeIcon icon={faBookOpen} className="text-primary" size="6x" /><br />
                 </div>
-                <div className="col-md-4 text-center">
-                    <FontAwesomeIcon className="text-primary" icon={faCheckSquare} size="6x" />
-                    <h3 className="mt-4 text-secondary">Track your Progress</h3>
-                </div>
-                <div className="col-md-4 text-center">
-                    <FontAwesomeIcon className="text-primary" icon={faTrophy} size="6x" />
-                    <h3 className="mt-4 text-secondary">Meet your Goal</h3>
+                <div className="col-6 text-left">
+                    <h3 className="mt-2 mb-4 text-secondary">Find your Book</h3>
                 </div>
             </div>
-            <div className="row mt-5">
-                <div className="col-md-4 offset-4 col-sm-12 offset-0 mt-5 mb-5">
+            <div className="row mt-3 ">
+                <div className="col-6 text-right pr-4">
+                    <FontAwesomeIcon className="text-primary" icon={faCheckSquare} size="6x" />
+                </div>
+                <div className="col-6 text-left">
+                    <h3 className="mt-2 mb-4 text-secondary">Track your Progress</h3>
+                </div>
+            </div>
+            <div className="row mt-3 ">
+                <div className="col-6 text-right">
+                    <FontAwesomeIcon className="text-primary" icon={faTrophy} size="6x" />
+                </div>
+                <div className="col-6 text-left">
+                    <h3 className="mt-2 mb-4 text-secondary">Meet your Goal</h3>
+                </div>
+            </div>
+
+            <div className="row mt-3 text-center">
+                <div className="col mt-5 mb-5">
                     <form onSubmit={registerUser}>
                         <h5>Get started today</h5>
-                        <div class="form-group">
-                            <input onChange={(e) => setName(e.target.value)} value={name} type="name" class="form-control" id="exampleInputEmail1" aria-describedby="nameHelp" placeholder="Name" />
+                        <div className="form-group">
+                            <input onChange={(e) => setName(e.target.value)} value={name} type="name" className="form-control" id="exampleInputEmail1" aria-describedby="nameHelp" placeholder="Name" />
                         </div>
-                        <div class="form-group">
-                            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" />
+                        <div className="form-group">
+                            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" />
                         </div>
-                        <div class="form-group">
-                            <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                        <div className="form-group">
+                            <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
                         </div>
-                        <button type="submit" class="btn btn-outline-primary">Sign up</button>
+                        <button type="submit" className="btn btn-outline-primary">Sign up</button>
                     </form>
                 </div>
             </div>
