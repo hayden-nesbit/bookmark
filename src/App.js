@@ -14,6 +14,8 @@ import {
   Link,
 } from "react-router-dom";
 import './App.css'
+import Shelves from './UserShelves'
+
 
 function App() {
 
@@ -27,7 +29,9 @@ function App() {
   var goalData = JSON.parse(localStorage.getItem("goalData"));
   goalData = goalData ? goalData : []
   const [goal, setGoal] = useState(goalData);
- 
+  const [view, setView] = useState(0)
+  const [renderList, setRenderList] = useState([]);
+
   function storeTags(props) {
     setTags(props)
     localStorage.setItem("tagData", JSON.stringify(props))
@@ -38,7 +42,7 @@ function App() {
     setGoal(props)
     localStorage.setItem("goalData", JSON.stringify(props))
   }
-  
+
   function setUserData(userFromApi) {
     setUser(userFromApi)
     localStorage.setItem("userData", JSON.stringify(userFromApi))
@@ -63,85 +67,103 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <>
       <ReactNav
         clear={clearLocalStorage}
         setUserData={setUserData}
         user={user}
-        // token={token}
-
       />
-      <Switch>
-        <Route exact path="/">
-          <Landing setUserData={setUserData} />
-        </Route>
-        <Route path='/books'>
-          <BookView
-            books={books}
-            currentBook={currentBook}
-            setCurrentBook={setCurrentBook}
-            user={user}
-            // token={token}
-            setBookList={setBookList}
-            tags={tags}
-            storeTags={storeTags}
 
-          />
-        </Route>
-        <Route path="/(dash|search)/">
-          <Home
-            setUserData={setUserData}
-            user={user}
+      {view === 0 ?
+        <Landing
+          setUserData={setUserData}
+          user={user}
+          setView={setView}
+        />
+        : view === "search" ?
+          <BookSearch
             currentBook={currentBook}
             storeCurrent={storeCurrent}
-            storeBooks={storeBooks}
-            bookList={bookList}
-            setBookList={setBookList}
             books={books}
-            tags={tags}
-            storeTags={storeTags}
-            goal={goal}
-            storeGoal={storeGoal}
-
+            setView={setView}
+            storeBooks={storeBooks}
           >
-          </Home>
-        </Route>
-      </Switch>
-      <Footer />
-    </BrowserRouter>
+          </BookSearch>
+
+          : view === "bookview" ?
+            <BookView
+              books={books}
+              currentBook={currentBook}
+              setCurrentBook={setCurrentBook}
+              user={user}
+              // token={token}
+              setBookList={setBookList}
+              tags={tags}
+              storeTags={storeTags}
+              setView={setView}
+
+            />
+            : view === "home" ?
+              <Home
+                setUserData={setUserData}
+                user={user}
+                currentBook={currentBook}
+                storeCurrent={storeCurrent}
+                storeBooks={storeBooks}
+                bookList={bookList}
+                setBookList={setBookList}
+                books={books}
+                tags={tags}
+                storeTags={storeTags}
+                goal={goal}
+                storeGoal={storeGoal}
+                setView={setView}
+                renderList={renderList}
+                setRenderList={setRenderList}
+              >
+              </Home>
+              : view === "shelf" ?
+                <Shelves
+                  tags={tags}
+                  renderList={renderList}
+                  setRenderList={setRenderList}
+                  user={user}
+                />
+                : null
+      }
+
+
+      <Footer
+        view={view}
+        setView={setView}
+      />
+    </>
   );
 }
 function Home(props) {
   return (
-      <div id="main" className="container mt-4">
-        <SearchBar storeBooks={props.storeBooks} />
-        <Switch>
-          <Route path='/dash'>
-            <UserDash
-              setUserData={props.setUserData}
-              user={props.user}
-              currentBook={props.currentBook}
-              storeCurrent={props.storeCurrent}
-              bookList={props.bookList}
-              setBookList={props.setBookList}
-              books={props.books}
-              tags={props.tags}
-              storeTags={props.storeTags}
-              goal={props.goal}
-              storeGoal={props.storeGoal}
-                >
-            </UserDash>
-          </Route>
-          <Route path='/search'>
-            <BookSearch
-              currentBook={props.currentBook}
-              storeCurrent={props.storeCurrent}
-              books={props.books}
-            >
-            </BookSearch>
-          </Route>
-        </Switch>
-      </div>
+    <div id="main" className="container mt-4">
+
+      <Shelves />
+          <UserDash
+            setUserData={props.setUserData}
+            user={props.user}
+            currentBook={props.currentBook}
+            storeCurrent={props.storeCurrent}
+            bookList={props.bookList}
+            setBookList={props.setBookList}
+            books={props.books}
+            tags={props.tags}
+            storeTags={props.storeTags}
+            goal={props.goal}
+            storeGoal={props.storeGoal}
+            setView={props.setView}
+            renderList={props.renderList}
+            setRenderList={props.setRenderList}
+          >
+          </UserDash>
+      
+    </div>
   )
 }
 

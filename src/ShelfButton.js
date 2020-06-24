@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import axios from 'axios';
-import { useHistory } from "react-router-dom"
 
 
 const ShelfButton = (props) => {
     // const API_KEY = "https://gifted-chimera-277819.uc.r.appspot.com/api/"
   const API_KEY = "http://127.0.0.1:8000/api/"
 
-  const history = useHistory();
   const [dropdownOpen, setOpen] = useState(false);
 
   const toggle = () => setOpen(!dropdownOpen);
@@ -33,7 +31,7 @@ const ShelfButton = (props) => {
       .then(function (response) {
         props.setBookList(response.data)
         props.storeTags(response.data)
-        history.push("/dash")
+        props.setView("dash")
 
       })
       .catch(function (error) {

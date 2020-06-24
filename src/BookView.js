@@ -27,6 +27,7 @@ function BookView(props) {
                         setBookList={props.setBookList}
                         tags={props.tags}
                         storeTags={props.storeTags}
+                        setView={props.setView}
 
                     />
                 </div>

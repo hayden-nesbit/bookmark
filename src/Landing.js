@@ -6,6 +6,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookOpen, faCheckSquare, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from "react-router-dom"
 import { far } from '@fortawesome/free-regular-svg-icons';
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    NavLink,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    NavbarText,
+    Button, Form, FormGroup, Label, Input
+} from 'reactstrap';
 
 
 function Landing(props) {
@@ -16,7 +31,6 @@ function Landing(props) {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const history = useHistory();
 
 
     function registerUser(e) {
@@ -34,12 +48,85 @@ function Landing(props) {
                     user: response.data.user,
                     token: response.data.token
                 })
-                history.push("/dash")
+                props.setView("dash")
+                // history.push("/dash")
 
             })
             .catch(errors => {
                 console.log(errors)
             });
+    }
+
+    const Login = (props) => {
+        // const API_KEY = 'https://gifted-chimera-277819.uc.r.appspot.com/api/'
+        const API_KEY = "http://127.0.0.1:8000/api/"
+
+
+        const [password, setPassword] = useState("");
+        const [email, setEmail] = useState("");
+        // const history = useHistory();
+
+        function loginUser(e) {
+            e.preventDefault()
+
+            const data = {
+                email: email,
+                password: password
+            };
+            axios.post(API_KEY + 'login', data)
+                .then(response => {
+                    props.setUserData(response.data)
+                    props.setView("dash")
+
+                    // history.push("/dash")
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+        }
+
+        function logoutUser() {
+            const data = {
+                headers: { Authorization: "Bearer " + props.user.token }
+            }
+            axios.get(API_KEY + 'logout', data)
+                .then(response => {
+                    localStorage.clear();
+                    props.setView("home")
+                    props.clear({
+                        user: {},
+                        token: ""
+                    })
+
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+        }
+
+        return (
+            <React.Fragment>
+                {!props.user.token ?
+                    <form onSubmit={loginUser}>
+                        <h5>Login</h5>
+                        <div className="form-group">
+                            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="nameHelp" placeholder="Email" />
+                        </div>
+                        <div className="form-group">
+                            <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Password" />
+                        </div>
+                        <button type="submit" className="btn btn-outline-primary">Login</button>
+                    </form>
+                    :
+                    <React.Fragment>
+                        <NavLink href="/dash">My Dashboard</NavLink>
+                        <Button onClick={logoutUser} color="secondary">Logout</Button>
+                    </React.Fragment>
+                }
+            </React.Fragment>
+        );
     }
 
     return (
@@ -70,9 +157,16 @@ function Landing(props) {
             </div>
 
             <div className="row mt-3 text-center">
-                <div className="col mt-5 mb-5">
+                <div className="col-6 mt-5 mb-5">
+                    <Login
+                        user={props.user}
+                        setUserData={props.setUserData}
+                        setView={props.setView}
+                    />
+                </div>
+                <div className="col-6 mt-5 mb-5">
                     <form onSubmit={registerUser}>
-                        <h5>Get started today</h5>
+                        <h5>Register</h5>
                         <div className="form-group">
                             <input onChange={(e) => setName(e.target.value)} value={name} type="name" className="form-control" id="exampleInputEmail1" aria-describedby="nameHelp" placeholder="Name" />
                         </div>
