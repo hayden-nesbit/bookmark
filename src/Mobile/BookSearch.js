@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import apiKey from './apiKey'
+import apiKey from '../apiKey'
 import SearchBar from './SearchBar'
 import './BookSearch.css'
 import axios from 'axios'

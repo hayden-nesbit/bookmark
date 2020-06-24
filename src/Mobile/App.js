@@ -68,103 +68,76 @@ function App() {
 
   return (
     <>
-      <ReactNav
-        clear={clearLocalStorage}
-        setUserData={setUserData}
-        user={user}
-      />
-
-      {view === 0 ?
-        <Landing
+      <div id="whole">
+        <ReactNav
+          clear={clearLocalStorage}
           setUserData={setUserData}
           user={user}
-          setView={setView}
         />
-        : view === "search" ?
-          <BookSearch
-            currentBook={currentBook}
-            storeCurrent={storeCurrent}
-            books={books}
+
+        {view === 0 ?
+          <Landing
+            setUserData={setUserData}
+            user={user}
             setView={setView}
-            storeBooks={storeBooks}
-          >
-          </BookSearch>
+          />
 
-          : view === "bookview" ?
-            <BookView
-              books={books}
+          : view === "search" ?
+            <BookSearch
               currentBook={currentBook}
-              setCurrentBook={setCurrentBook}
-              user={user}
-              // token={token}
-              setBookList={setBookList}
-              tags={tags}
-              storeTags={storeTags}
+              storeCurrent={storeCurrent}
+              books={books}
               setView={setView}
-
+              storeBooks={storeBooks}
             />
-            : view === "home" ?
-              <Home
-                setUserData={setUserData}
-                user={user}
-                currentBook={currentBook}
-                storeCurrent={storeCurrent}
-                storeBooks={storeBooks}
-                bookList={bookList}
-                setBookList={setBookList}
+
+            : view === "bookview" ?
+              <BookView
                 books={books}
+                currentBook={currentBook}
+                setCurrentBook={setCurrentBook}
+                user={user}
+                setBookList={setBookList}
                 tags={tags}
                 storeTags={storeTags}
-                goal={goal}
-                storeGoal={storeGoal}
                 setView={setView}
-                renderList={renderList}
-                setRenderList={setRenderList}
-              >
-              </Home>
-              : view === "shelf" ?
-                <Shelves
+
+              />
+              : view === "dash" ?
+                <UserDash
+                  setUserData={setUserData}
+                  user={user}
+                  currentBook={currentBook}
+                  storeCurrent={storeCurrent}
+                  storeBooks={storeBooks}
+                  bookList={bookList}
+                  setBookList={setBookList}
+                  books={books}
                   tags={tags}
+                  storeTags={storeTags}
+                  goal={goal}
+                  storeGoal={storeGoal}
+                  setView={setView}
                   renderList={renderList}
                   setRenderList={setRenderList}
-                  user={user}
                 />
-                : null
-      }
-
-
+                : view === "shelf" ?
+                  <Shelves
+                    tags={tags}
+                    renderList={renderList}
+                    setRenderList={setRenderList}
+                    user={user}
+                    setView={setView}
+                  />
+                  : null
+        }
+      </div>
       <Footer
         view={view}
         setView={setView}
       />
     </>
   );
-}
-function Home(props) {
-  return (
-    <div id="main" className="container mt-4">
-
-      <Shelves />
-          <UserDash
-            setUserData={props.setUserData}
-            user={props.user}
-            currentBook={props.currentBook}
-            storeCurrent={props.storeCurrent}
-            bookList={props.bookList}
-            setBookList={props.setBookList}
-            books={props.books}
-            tags={props.tags}
-            storeTags={props.storeTags}
-            goal={props.goal}
-            storeGoal={props.storeGoal}
-            setView={props.setView}
-            renderList={props.renderList}
-            setRenderList={props.setRenderList}
-          >
-          </UserDash>
-      
-    </div>
-  )
 }
 
 export default App;

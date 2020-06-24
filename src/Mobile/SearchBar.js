@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import apiKey from './apiKey'
+import apiKey from '../apiKey'
 import { useHistory } from "react-router-dom"
 
 

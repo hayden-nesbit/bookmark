@@ -109,8 +109,8 @@ function UserDash(props) {
             });
     }
 
-    async function clearGoal(id, resetPage, tag) {
-
+   async function clearGoal(id, resetPage, tag) {
+       
         const data = {
             book_id: id,
             tag_id: tag,
@@ -129,7 +129,7 @@ function UserDash(props) {
 
         let update = props.goal.filter(goal => goal.id !== id)
         props.storeGoal(update)
-
+        
     }
 
     function handleClick(view, check, id, index) {
@@ -246,7 +246,7 @@ function UserDash(props) {
                 <div id="goalCard" className="mb-5 mt-4" style={{ width: '18rem' }}>
                     {/* <div id="goalHeight" className=""> */}
                     <div className="row">
-                        <div className="col">
+                        <div className="col-4">
                             {item.image ?
                                 <img src={item.image} className="float-left mb-3" />
                                 :
@@ -262,7 +262,7 @@ function UserDash(props) {
                             />
 
                         </div>
-                        <div className="col pt-2">
+                        <div className="col-8 pt-2">
                             <div className="row">
                                 <div className="col">
                                     {check === true && checkId.includes(item.id) ?
@@ -296,16 +296,16 @@ function UserDash(props) {
                                             }
 
                                             {end !== startDate ?
-                                                <div className="row mt-5">
-                                                    <div className="col">
-                                                        <p className="text-center mt-1">I'm on page</p>
-                                                        <form onSubmit={() => handleClick(0, true, item.id, index)}>
-                                                            <input onChange={(e) => setInput(e.target.value, item.id)} type="text" className="form-control form-control-sm col-4 offset-4" id="inputsm" />
-                                                        </form>
-                                                    </div>
+                                            <div className="row mt-5">
+                                                <div className="col">
+                                                    <p className="text-center mt-1">I'm on page</p>
+                                                    <form onSubmit={() => handleClick(0, true, item.id, index)}>
+                                                        <input onChange={(e) => setInput(e.target.value, item.id)} type="text" className="form-control form-control-sm col-4 offset-4" id="inputsm" />
+                                                    </form>
                                                 </div>
-                                                :
-                                                null
+                                            </div>
+                                            :
+                                            null
                                             }
                                         </>
                                     }
@@ -323,9 +323,10 @@ function UserDash(props) {
         </div>
 
 
+    const [renderList, setRenderList] = useState([]);
 
     function showView(view) {
-        props.setRenderList(tags.filter(tag => tag.tag_id === view))
+        setRenderList(tags.filter(tag => tag.tag_id === view))
         setView(view)
     }
 
@@ -371,77 +372,86 @@ function UserDash(props) {
         );
     }
 
-    // const dashOptions = () => {
-    //     return (
-    //         <ul className="list-unstyled">
-    //             <li className="mb-3"><a className={view === 1 ? "text-muted" : null} href="#" onClick={() => showView(1)}>want-to-read ({tags.filter(tag => tag.tag_id === 1).length})</a></li>
-    //             <li className="mb-3"><a className={view === 2 ? "text-muted" : null} href="#" onClick={() => showView(2)}>currently-reading ({tags.filter(tag => tag.tag_id === 2).length})</a></li>
-    //             <li className="mb-3"><a className={view === 3 ? "text-muted" : null} href="#" onClick={() => showView(3)}>read ({tags.filter(tag => tag.tag_id === 3).length})</a></li>
-    //             {view === 0 ?
-    //                 <li>
-    //                     <br />
-    //                     {props.goal.length > 0 && view === 0 ?
-    //                         <Toggle switchMeasure={switchMeasure} />
-    //                         :
-    //                         null
-    //                     }
-    //                 </li>
-    //                 :
-    //                 <div>
-    //                     <br />
-    //                     <li className="mb-3"><a href="#" onClick={() => showView(0)}><FontAwesomeIcon icon={faArrowAltCircleLeft} size="lg" /></a></li>
-    //                 </div>
-    //             }
-    //         </ul>
-    //     )
-    // }
+    const dashOptions = () => {
+        return (
+            <ul className="list-unstyled">
+                <li className="mb-3"><a className={view === 1 ? "text-muted" : null} href="#" onClick={() => showView(1)}>want-to-read ({tags.filter(tag => tag.tag_id === 1).length})</a></li>
+                <li className="mb-3"><a className={view === 2 ? "text-muted" : null} href="#" onClick={() => showView(2)}>currently-reading ({tags.filter(tag => tag.tag_id === 2).length})</a></li>
+                <li className="mb-3"><a className={view === 3 ? "text-muted" : null} href="#" onClick={() => showView(3)}>read ({tags.filter(tag => tag.tag_id === 3).length})</a></li>
+                {view === 0 ?
+                    <li>
+                        <br />
+                        {props.goal.length > 0 && view === 0 ?
+                            <Toggle switchMeasure={switchMeasure} />
+                            :
+                            null
+                        }
+                    </li>
+                    :
+                    <div>
+                        <br />
+                        <li className="mb-3"><a href="#" onClick={() => showView(0)}><FontAwesomeIcon icon={faArrowAltCircleLeft} size="lg" /></a></li>
+                    </div>
+                }
+            </ul>
+        )
+    }
 
     return (
+        <>
+            <div className="row">
+                <div className="col-md-4 col-12 mt-4">
+                    {props.user ?
+                        <h5>{user.name}'s <br />bookshelves</h5>
+                        :
+                        <h5>Bookshelves</h5>
+                    }
+                    <br />
+                    {props.user ? dashOptions() : null}
+                </div>
+                <div id="goalScroll" className="col-md-8 col-12 mt-4">
+                    {view !== 0
+                        /* && renderList.length > 0  */
+                        ?
+                        renderList.map((book, index) => {
+                            return (
+                                <div id="booktable" className="row py-3">
+                                    <div className="col-sm-5">
+                                        <i>{book.title}</i>, {book.author}
+                                    </div>
+                                    <div className="col-md-2 col-2">
+                                        <UpdateButton
+                                            user={props.user}
+                                            view={view}
+                                            book={book.book_id}
+                                            storeTags={props.storeTags}
+                                            showView={showView}
+                                            id={book.tag_id}
+                                            tags={tags}
 
-        <div className="row">
-            <div id="goalScroll" className="col-md-8 col-12 mt-4">
-                {view !== 0
-                    /* && renderList.length > 0  */
-                    ?
-                    props.renderList.map((book, index) => {
-                        return (
-                            <div id="booktable" className="row py-3">
-                                <div className="col-sm-5">
-                                    <i>{book.title}</i>, {book.author}
+                                        />
+                                    </div>
+                                    <div className="col-md-2 col-2">
+                                        <button id={index} onClick={() => setGoal(book.book_id, renderList)} className="btn btn-success btn-sm">Add Goal</button>
+                                    </div>
+                                    <div className="col-md-2 col-2">
+                                        <button id={index} onClick={() => deleteBook(book.book_id, user.id, book.tag_id)} className="btn btn-danger btn-sm">Remove</button>
+                                    </div>
                                 </div>
-                                <div className="col-md-2 col-2">
-                                    <UpdateButton
-                                        user={props.user}
-                                        view={view}
-                                        book={book.book_id}
-                                        storeTags={props.storeTags}
-                                        showView={showView}
-                                        id={book.tag_id}
-                                        tags={tags}
 
-                                    />
-                                </div>
-                                <div className="col-md-2 col-2">
-                                    <button id={index} onClick={() => setGoal(book.book_id, props.renderList)} className="btn btn-success btn-sm">Add Goal</button>
-                                </div>
-                                <div className="col-md-2 col-2">
-                                    <button id={index} onClick={() => deleteBook(book.book_id, user.id, book.tag_id)} className="btn btn-danger btn-sm">Remove</button>
-                                </div>
+                            )
+                        })
+
+                        :
+                        <>
+                            <div className="row d-flex flex-row flex-nowrap">
+                                {goalView}
                             </div>
-
-                        )
-                    })
-
-                    :
-                    <>
-                        <div className="row d-flex flex-row flex-nowrap">
-                            {goalView}
-                        </div>
-                    </>
-                }
+                        </>
+                    }
+                </div>
             </div>
-        </div>
-
+        </>
 
 
     )
@@ -452,21 +462,3 @@ function UserDash(props) {
 
 
 export default UserDash;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
